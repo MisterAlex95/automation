@@ -32,4 +32,8 @@ void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
     {
         game_spawn_item(ITEM_TYPE_INGOT, game_get_cursor_x(), game_get_cursor_y());
     }
+    else if (keys & J_START && !(keys_prev & J_START))
+    {
+        game.paused = !game.paused;
+    }
 }

@@ -49,6 +49,6 @@ void ui_draw_item_x_info(UBYTE x)
 {
     item_t *item = &game.items[x];
     char buf[32];
-    sprintf(buf, "pos=%d,%d   ", item->pos_x, item->pos_y);
+    sprintf(buf, "(%d,%d)   (%d,%d)", item->pos_x, item->pos_y, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
     graphics_draw_text(1, SCREEN_TILE_HEIGHT - 2, buf);
 }

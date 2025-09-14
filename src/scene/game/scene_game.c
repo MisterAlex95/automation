@@ -28,7 +28,10 @@ static void load(void)
 
 static void update(void)
 {
-  game_conveyor_belt_update();
+  if (!game.paused)
+  {
+    game_conveyor_belt_update();
+  }
   display_items();
   ui_draw_hud();
 }

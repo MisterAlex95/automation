@@ -23,6 +23,7 @@ typedef struct
     item_t items[MAX_ITEMS];
     uint8_t cursor_x, cursor_y;
     uint16_t score;
+    UBYTE paused;
 } game_t;
 
 void game_init(void);
