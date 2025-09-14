@@ -23,7 +23,7 @@ static void load(void)
   graphics_assign_sprite(UI_SPRITE_CURSOR, SPRITE_VRAM_INDEX_CURSOR);
   graphics_hide_all_sprites();
 
-  graphics_move_sprite(UI_SPRITE_CURSOR, 88, 72);
+  graphics_move_sprite(UI_SPRITE_CURSOR, game.cursor_x, game.cursor_y);
 }
 
 static void update(void)
@@ -48,9 +48,11 @@ void display_items(void)
   UINT8 y_positions[MAX_ITEMS] = {0};
   UINT8 count = 0;
 
-  for (int i = 0; i < MAX_ITEMS; i++)
+  UBYTE *activeItemsIds = game_get_active_items();
+
+  for (int i = 0; activeItemsIds[i] < 0xFF; i++)
   {
-    item_t *item = &game.items[i];
+    item_t *item = &game.items[activeItemsIds[i]];
     if (item->type != ITEM_TYPE_NONE)
     {
       sprite_ids[count] = item->sprite_id;

@@ -5,11 +5,11 @@ void game_move_cursor(int dx, int dy)
     game.cursor_x += dx;
     game.cursor_y += dy;
 
-    if (game.cursor_x < 0)
-        game.cursor_x = 0;
+    if (game.cursor_x < 1)
+        game.cursor_x = 1;
 
-    if (game.cursor_y < 0)
-        game.cursor_y = 0;
+    if (game.cursor_y < 2)
+        game.cursor_y = 2;
 
     if (game.cursor_x >= MAP_WIDTH)
         game.cursor_x = MAP_WIDTH - 1;

@@ -27,6 +27,8 @@ typedef struct
 
 void game_init(void);
 void game_update_game(void);
+UBYTE *game_get_active_items(void);
+void game_update_list_of_active_items(void);
 
 extern game_t game;
 

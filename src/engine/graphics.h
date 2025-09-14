@@ -3,6 +3,9 @@
 
 #include <gb/gb.h>
 
+#define START_X 8
+#define START_Y 16
+
 #define SCREEN_TILE_WIDTH 20
 #define SCREEN_TILE_HEIGHT 18
 #define TILE_SIZE 8
