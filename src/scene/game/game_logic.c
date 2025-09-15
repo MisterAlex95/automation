@@ -4,6 +4,7 @@
 #include "item.h"
 #include "graphics.h"
 #include "timer.h"
+#include "game_map.h"
 
 void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
 {
@@ -24,7 +25,7 @@ void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
 
 item_t *game_get_free_item_slot(void)
 {
-    for (int i = 0; i < MAX_ITEMS; i++)
+    for (UBYTE i = 0; i < MAX_ITEMS; i++)
     {
         if (game.items[i].type == ITEM_TYPE_NONE)
         {
@@ -37,7 +38,7 @@ item_t *game_get_free_item_slot(void)
 void game_conveyor_belt_update(void)
 {
     UBYTE *activeItemsIds = game_get_active_items();
-    for (int i = 0; activeItemsIds[i] < 0xFF; i++)
+    for (UBYTE i = 0; activeItemsIds[i] < 0xFF; i++)
     {
         item_t *item = &game.items[activeItemsIds[i]];
         if (item->type == ITEM_TYPE_NONE)
@@ -72,17 +73,14 @@ void game_conveyor_belt_update(void)
             break;
         }
 
-        int new_x = item->pos_x + dx;
-        int new_y = item->pos_y + dy;
+        UBYTE new_x = item->pos_x + dx;
+        UBYTE new_y = item->pos_y + dy;
 
         if (new_x >= 0 && new_x < (MAP_WIDTH * TILE_SIZE))
             item->pos_x = new_x;
         if (new_y >= 0 && new_y < (MAP_HEIGHT * TILE_SIZE))
             item->pos_y = new_y;
-    }
-}
 
-UBYTE game_get_tile_at_position(UINT8 x, UINT8 y)
-{
-    return mapBackground[x / TILE_SIZE + (y / TILE_SIZE) * MAP_WIDTH];
+        
+    }
 }

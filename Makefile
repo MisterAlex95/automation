@@ -42,6 +42,7 @@ SOURCES = \
 	$(SRC_SCENE_GAME)/input_handler.c \
 	$(SRC_SCENE_GAME)/scene_game.c \
 	$(SRC_SCENE_GAME)/ui_manager.c \
+	$(SRC_SCENE_GAME)/game_map.c \
 	$(SRC_ASSETS_DIR)/map.c \
 	$(SRC_ASSETS_DIR)/item.c \
 	$(SRC_ASSETS_DIR)/ui.c \

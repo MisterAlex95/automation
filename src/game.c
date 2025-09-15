@@ -19,8 +19,8 @@ void game_init(void)
         game.items[i].id = i;
         game.items[i].direction = DIRECTION_UP;
     }
-    game.cursor_x = 5 * TILE_SIZE;
-    game.cursor_y = 5 * TILE_SIZE;
+    game.cursor_x = 5;
+    game.cursor_y = 5;
     game.paused = 0;
 
     game_update_list_of_active_items();
