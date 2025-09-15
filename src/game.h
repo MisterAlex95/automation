@@ -19,7 +19,7 @@ typedef struct
 {
     UBYTE id;
     UBYTE direction;
-    uint8_t pos_x, pos_y;
+    UBYTE pos_x, pos_y;
     UBYTE type;
     UBYTE sprite_id;
 } item_t;
@@ -27,8 +27,7 @@ typedef struct
 typedef struct
 {
     item_t items[MAX_ITEMS];
-    uint8_t cursor_x, cursor_y;
-    uint16_t score;
+    UBYTE cursor_x, cursor_y;
     UBYTE paused;
 } game_t;
 

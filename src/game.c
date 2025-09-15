@@ -9,7 +9,6 @@ static UBYTE active_items[MAX_ITEMS];
 
 void game_init(void)
 {
-    game.score = 0;
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         game.items[i].type = ITEM_TYPE_NONE;

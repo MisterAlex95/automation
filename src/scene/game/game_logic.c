@@ -17,6 +17,8 @@ void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
     item->pos_y = y * TILE_SIZE;
     item->sprite_id = item->id + ITEMS_VRAM_INDEX_TOTAL;
 
+    game_map_place_item_on_tile(item->id, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
+
     graphics_assign_sprite(item->sprite_id, ITEMS_VRAM_INDEX_TOTAL);
     graphics_move_sprite(item->sprite_id, item->pos_x, item->pos_y);
 
@@ -46,7 +48,7 @@ void game_conveyor_belt_update(void)
 
         UBYTE item_x_pos = item->pos_x - DEVICE_SPRITE_PX_OFFSET_X + (item->direction == DIRECTION_RIGHT ? 0 : TILE_SIZE - 1);
         UBYTE item_y_pos = item->pos_y - DEVICE_SPRITE_PX_OFFSET_Y + (item->direction == DIRECTION_DOWN ? 0 : TILE_SIZE - 1);
-        UBYTE tile = game_get_tile_at_position(item_x_pos, item_y_pos);
+        UBYTE tile = game_map_get_tile_at_position(item_x_pos, item_y_pos);
 
         int dx = 0, dy = 0;
 
@@ -76,11 +78,12 @@ void game_conveyor_belt_update(void)
         UBYTE new_x = item->pos_x + dx;
         UBYTE new_y = item->pos_y + dy;
 
+        game_map_remove_item_from_tile(item->id, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
         if (new_x >= 0 && new_x < (MAP_WIDTH * TILE_SIZE))
             item->pos_x = new_x;
         if (new_y >= 0 && new_y < (MAP_HEIGHT * TILE_SIZE))
             item->pos_y = new_y;
 
-        
+        game_map_place_item_on_tile(item->id, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
     }
 }

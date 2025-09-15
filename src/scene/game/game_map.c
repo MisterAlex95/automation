@@ -2,19 +2,22 @@
 #include "map.h"
 #include "game.h"
 
-UBYTE game_get_tile_at_position(UBYTE x, UBYTE y)
+UBYTE tile_buffer[MAP_WIDTH][MAP_HEIGHT][MAX_ITEMS_PER_TILE] = {{{0}}};
+UBYTE tile_count[MAP_WIDTH][MAP_HEIGHT] = {{0}};
+
+UBYTE game_map_get_tile_at_position(UBYTE x, UBYTE y)
 {
     return mapBackground[x / TILE_SIZE + (y / TILE_SIZE) * MAP_WIDTH];
 }
 
-UBYTE *game_get_items_on_tile(UBYTE tile_x, UBYTE tile_y, UBYTE *out_count)
+UBYTE *game_map_get_items_on_tile(UBYTE tile_x, UBYTE tile_y, UBYTE *out_count)
 {
     if (out_count)
         *out_count = tile_count[tile_x][tile_y];
     return tile_buffer[tile_x][tile_y];
 }
 
-void game_place_item_on_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y)
+void game_map_place_item_on_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y)
 {
     if (tile_count[tile_x][tile_y] < MAX_ITEMS_PER_TILE)
     {
@@ -22,7 +25,7 @@ void game_place_item_on_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y)
     }
 }
 
-void game_remove_item_from_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y)
+void game_map_remove_item_from_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y)
 {
     UBYTE *items = tile_buffer[tile_x][tile_y];
     UBYTE count = tile_count[tile_x][tile_y];
@@ -38,7 +41,7 @@ void game_remove_item_from_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y)
     }
 }
 
-void game_clear_tile(UBYTE tile_x, UBYTE tile_y)
+void game_map_clear_tile(UBYTE tile_x, UBYTE tile_y)
 {
     tile_count[tile_x][tile_y] = 0;
     tile_buffer[tile_x][tile_y][0] = 0xFF;
