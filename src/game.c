@@ -17,6 +17,7 @@ void game_init(void)
         game.items[i].pos_y = 0;
         game.items[i].sprite_id = 0;
         game.items[i].id = i;
+        game.items[i].direction = DIRECTION_UP;
     }
     game.cursor_x = 5 * TILE_SIZE;
     game.cursor_y = 5 * TILE_SIZE;

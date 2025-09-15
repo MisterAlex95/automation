@@ -10,9 +10,15 @@
 #define ITEM_TYPE_NONE 0
 #define ITEM_TYPE_INGOT 1
 
+#define DIRECTION_UP 0
+#define DIRECTION_RIGHT 1
+#define DIRECTION_DOWN 2
+#define DIRECTION_LEFT 3
+
 typedef struct
 {
     UBYTE id;
+    UBYTE direction;
     uint8_t pos_x, pos_y;
     UBYTE type;
     UBYTE sprite_id;

@@ -43,7 +43,9 @@ void game_conveyor_belt_update(void)
         if (item->type == ITEM_TYPE_NONE)
             continue;
 
-        UBYTE tile = game_get_tile_at_position(item->pos_x - START_X, item->pos_y - START_Y);
+        UBYTE item_x_pos = item->pos_x - DEVICE_SPRITE_PX_OFFSET_X + (item->direction == DIRECTION_RIGHT ? 0 : TILE_SIZE - 1);
+        UBYTE item_y_pos = item->pos_y - DEVICE_SPRITE_PX_OFFSET_Y + (item->direction == DIRECTION_DOWN ? 0 : TILE_SIZE - 1);
+        UBYTE tile = game_get_tile_at_position(item_x_pos, item_y_pos);
 
         int dx = 0, dy = 0;
 
@@ -51,15 +53,19 @@ void game_conveyor_belt_update(void)
         {
         case BG_CONVEYOR_BELT_RIGHT:
             dx = +1;
+            item->direction = DIRECTION_RIGHT;
             break;
         case BG_CONVEYOR_BELT_LEFT:
             dx = -1;
+            item->direction = DIRECTION_LEFT;
             break;
         case BG_CONVEYOR_BELT_UP:
             dy = -1;
+            item->direction = DIRECTION_UP;
             break;
         case BG_CONVEYOR_BELT_DOWN:
             dy = +1;
+            item->direction = DIRECTION_DOWN;
             break;
 
         default:
