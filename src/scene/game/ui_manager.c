@@ -8,7 +8,7 @@ void ui_draw_hud(void)
 {
     ui_draw_tile_info_under_cursor();
     ui_draw_nbr_active_items();
-    // ui_cursor_position();
+    ui_cursor_position();
     // ui_draw_item_x_info(0);
     // ui_draw_timer();
 }
@@ -23,8 +23,8 @@ void ui_draw_timer(void)
 void ui_cursor_position(void)
 {
     char buf[32];
-    sprintf(buf, "%d,%d  ", game.cursor_x, game.cursor_y);
-    graphics_draw_text(1, SCREEN_TILE_HEIGHT - 1, buf);
+    sprintf(buf, "(%d,%d)  ", game.cursor_x, game.cursor_y);
+    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 3, buf);
 }
 
 void ui_draw_nbr_active_items(void)
@@ -37,7 +37,7 @@ void ui_draw_nbr_active_items(void)
     }
     char buf[32];
     sprintf(buf, "Active: %d", count);
-    graphics_draw_text(1, SCREEN_TILE_HEIGHT - 2, buf);
+    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 2, buf);
 }
 
 void ui_draw_item_x_info(UBYTE x)
@@ -45,7 +45,7 @@ void ui_draw_item_x_info(UBYTE x)
     item_t *item = &game.items[x];
     char buf[32];
     sprintf(buf, "(%d,%d)   (%d,%d)", item->pos_x, item->pos_y, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
-    graphics_draw_text(1, SCREEN_TILE_HEIGHT - 2, buf);
+    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 2, buf);
 }
 
 void ui_draw_tile_info_under_cursor(void)
@@ -56,5 +56,5 @@ void ui_draw_tile_info_under_cursor(void)
 
     char buf[32];
     sprintf(buf, "Tile: %d (%d items) ", tile, out_count);
-    graphics_draw_text(1, SCREEN_TILE_HEIGHT - 1, buf);
+    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 1, buf);
 }

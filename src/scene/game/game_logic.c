@@ -25,6 +25,18 @@ void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
     game_update_list_of_active_items();
 }
 
+void game_spawn_tile(UBYTE type, UINT8 x, UINT8 y)
+{
+    switch (type)
+    {
+    case TILE_TYPE_CONVEYOR:
+        game_map_place_tile(x, y, TILE_TYPE_CONVEYOR, game.cursor_direction);
+        break;
+    default:
+        break;
+    }
+}
+
 item_t *game_get_free_item_slot(void)
 {
     for (UBYTE i = 0; i < MAX_ITEMS; i++)

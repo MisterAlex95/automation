@@ -20,6 +20,7 @@ void game_init(void)
     }
     game.cursor_x = 5;
     game.cursor_y = 5;
+    game.cursor_direction = DIRECTION_RIGHT;
     game.paused = 0;
 
     game_update_list_of_active_items();

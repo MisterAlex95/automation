@@ -30,7 +30,12 @@ void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
 
     if (keys & J_A && !(keys_prev & J_A))
     {
-        game_spawn_item(ITEM_TYPE_INGOT, game_get_cursor_x(), game_get_cursor_y());
+        //        game_spawn_item(ITEM_TYPE_INGOT, game_get_cursor_x(), game_get_cursor_y());
+        game_spawn_tile(TILE_TYPE_CONVEYOR, game_get_cursor_x(), game_get_cursor_y());
+    }
+    else if (keys & J_B && !(keys_prev & J_B))
+    {
+        game.cursor_direction = (game.cursor_direction + 1) % 4;
     }
     else if (keys & J_START && !(keys_prev & J_START))
     {

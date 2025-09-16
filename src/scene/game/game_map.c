@@ -1,6 +1,7 @@
 #include "game_map.h"
 #include "map.h"
 #include "game.h"
+#include "graphics.h"
 
 UBYTE tile_buffer[MAP_WIDTH][MAP_HEIGHT][MAX_ITEMS_PER_TILE] = {{{0}}};
 UBYTE tile_count[MAP_WIDTH][MAP_HEIGHT] = {{0}};
@@ -45,4 +46,34 @@ void game_map_clear_tile(UBYTE tile_x, UBYTE tile_y)
 {
     tile_count[tile_x][tile_y] = 0;
     tile_buffer[tile_x][tile_y][0] = 0xFF;
+}
+
+void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE direction)
+{
+    UBYTE x = tile_x - 1, y = tile_y - 2;
+    if (x >= MAP_WIDTH || y >= MAP_HEIGHT)
+        return;
+
+    UBYTE tile_index = x + (y * MAP_WIDTH);
+
+    switch (tile_type)
+    {
+    case TILE_TYPE_NONE:
+        mapBackground[tile_index] = BG_EMPTY;
+        break;
+    case TILE_TYPE_CONVEYOR:
+        if (direction == DIRECTION_UP)
+            mapBackground[tile_index] = BG_CONVEYOR_BELT_UP;
+        else if (direction == DIRECTION_DOWN)
+            mapBackground[tile_index] = BG_CONVEYOR_BELT_DOWN;
+        else if (direction == DIRECTION_LEFT)
+            mapBackground[tile_index] = BG_CONVEYOR_BELT_LEFT;
+        else
+            mapBackground[tile_index] = BG_CONVEYOR_BELT_RIGHT;
+        break;
+    default:
+        break;
+    }
+
+    graphics_draw_background(mapBackground, MAP_WIDTH, MAP_HEIGHT);
 }

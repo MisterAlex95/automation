@@ -13,6 +13,6 @@
 #define SPRITE_VRAM_INDEX_TOTAL 5
 
 extern const unsigned char mapTiles[];
-extern const unsigned char mapBackground[];
+extern unsigned char mapBackground[];
 
 #endif // MAP_H

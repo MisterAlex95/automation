@@ -5,6 +5,7 @@
 #include "game.h"
 
 void game_spawn_item(UBYTE type, UINT8 x, UINT8 y);
+void game_spawn_tile(UBYTE type, UINT8 x, UINT8 y);
 void game_conveyor_belt_update(void);
 item_t *game_get_free_item_slot(void);
 
