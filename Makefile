@@ -43,6 +43,7 @@ SOURCES = \
 	$(SRC_SCENE_GAME)/scene_game.c \
 	$(SRC_SCENE_GAME)/ui_manager.c \
 	$(SRC_SCENE_GAME)/game_map.c \
+	$(SRC_SCENE_GAME)/menu/menu.c \
 	$(SRC_ASSETS_DIR)/map.c \
 	$(SRC_ASSETS_DIR)/item.c \
 	$(SRC_ASSETS_DIR)/ui.c \
@@ -56,6 +57,7 @@ CFLAGS = -Wa-l -Wl-m -Wl-j -I$(SRC_DIR) \
 	-I$(SRC_ENGINE_DIR) \
 	-I$(SRC_SYSTEM_DIR) \
 	-I$(SRC_SCENE_GAME) \
+	-I$(SRC_SCENE_GAME)/menu \
 	-I$(SRC_SCENE_MENU) \
 	-I$(SRC_ASSETS_DIR) \
 	-I$(SRC_UTILS_DIR)

@@ -1,4 +1,6 @@
+#include <gb/gb.h>
 #include "scene_game.h"
+#include "menu.h"
 #include "game.h"
 #include "graphics.h"
 #include "timer.h"
@@ -9,7 +11,6 @@
 #include "ui_manager.h"
 #include "game_logic.h"
 #include "scene_menu.h"
-#include <gb/gb.h>
 
 static void load(void)
 {
@@ -69,7 +70,14 @@ void display_items(void)
 
 static void handle_input(UINT8 keys, UINT8 keys_prev)
 {
-  input_handle_game_input(keys, keys_prev);
+  if (game.menu_state == MENU_ORIENTATION_SELECTION || game.menu_state == MENU_TILE_SELECTION)
+  {
+    menu_handle_input(keys, keys_prev);
+  }
+  else
+  {
+    input_handle_game_input(keys, keys_prev);
+  }
 }
 
 Scene scene_game = {load, update, unload, handle_input};

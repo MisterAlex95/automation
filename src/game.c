@@ -3,6 +3,7 @@
 #include "input.h"
 #include "graphics.h"
 #include "scene_menu.h"
+#include "menu.h"
 
 game_t game;
 static UBYTE active_items[MAX_ITEMS];
@@ -22,6 +23,8 @@ void game_init(void)
     game.cursor_y = 5;
     game.cursor_direction = DIRECTION_RIGHT;
     game.paused = 0;
+    game.menu_state = MENU_NONE;
+    game.selected_tile = TILE_TYPE_NONE;
 
     game_update_list_of_active_items();
 }

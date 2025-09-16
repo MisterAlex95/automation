@@ -9,6 +9,7 @@
 
 #define TILE_TYPE_NONE 0
 #define TILE_TYPE_CONVEYOR 1
+#define TILE_TYPE_FACTORY 2
 
 #define ITEM_TYPE_NONE 0
 #define ITEM_TYPE_INGOT 1
@@ -32,6 +33,8 @@ typedef struct
     item_t items[MAX_ITEMS];
     UBYTE cursor_x, cursor_y, cursor_direction;
     UBYTE paused;
+    UBYTE menu_state;
+    UBYTE selected_tile;
 } game_t;
 
 void game_init(void);

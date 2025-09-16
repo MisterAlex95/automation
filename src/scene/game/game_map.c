@@ -71,6 +71,9 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE dire
         else
             mapBackground[tile_index] = BG_CONVEYOR_BELT_RIGHT;
         break;
+    case TILE_TYPE_FACTORY:
+        mapBackground[tile_index] = BG_FACTORY;
+        break;
     default:
         break;
     }
