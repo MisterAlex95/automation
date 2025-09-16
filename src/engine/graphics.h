@@ -10,21 +10,31 @@
 #define MAX_SPRITES 40
 
 void graphics_init(void);
-void graphics_clear(void);
 
+// Background functions
+void graphics_clear(void);
 void graphics_load_tiles(const unsigned char *tiles, UINT16 tile_count, UINT8 vram_index);
 void graphics_draw_background(const unsigned char *map, UINT8 width, UINT8 height);
 
+// Sprite functions
 void graphics_load_sprite(const unsigned char *sprite_data, UINT8 vram_tile_index);
 void graphics_load_sprites(const unsigned char *sprite_data, UINT8 vram_tile_index, UINT8 count);
 void graphics_assign_sprite(UINT8 sprite_id, UINT8 vram_tile_index);
 void graphics_move_sprite(UINT8 sprite_id, UINT8 x, UINT8 y);
 void graphics_hide_sprite(UINT8 sprite_id);
 
-void graphics_draw_text(UINT8 x, UINT8 y, const char *text);
+// Window functions
+void graphics_load_window_tiles(const unsigned char *tiles, UINT16 tile_count, UINT8 vram_index);
+void graphics_draw_window(const unsigned char *map, UINT8 width, UINT8 height);
+void graphics_move_window(UINT8 x, UINT8 y);
+void graphics_show_window(void);
+void graphics_hide_window(void);
 
 // Optimized sprite management functions
 void graphics_hide_all_sprites(void);
 void graphics_batch_move_sprites(const UINT8 *sprite_ids, const UINT8 *x_positions, const UINT8 *y_positions, UINT8 count);
+void graphics_draw_window_text(UINT8 x, UINT8 y, const char *text);
+
+void graphics_draw_text(UINT8 x, UINT8 y, const char *text);
 
 #endif // GRAPHICS_H

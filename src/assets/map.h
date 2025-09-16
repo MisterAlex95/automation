@@ -9,8 +9,9 @@
 #define BG_CONVEYOR_BELT_DOWN 2
 #define BG_CONVEYOR_BELT_LEFT 3
 #define BG_CONVEYOR_BELT_UP 4
+#define BG_FACTORY 5
 
-#define SPRITE_VRAM_INDEX_TOTAL 5
+#define SPRITE_VRAM_INDEX_TOTAL 6
 
 extern const unsigned char mapTiles[];
 extern unsigned char mapBackground[];
