@@ -115,11 +115,3 @@ void graphics_move_window(UINT8 x, UINT8 y)
     // WX_REG = x + 7; WY_REG = y;
     move_win(x, y);
 }
-
-void graphics_draw_window_text(UINT8 x, UINT8 y, const char *text)
-{
-    // Offset
-    // WX_REG = x + 7; WY_REG = y;
-    wgotoxy(x, y);
-    wprintf("%s", text);
-}

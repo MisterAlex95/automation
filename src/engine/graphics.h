@@ -33,7 +33,6 @@ void graphics_hide_window(void);
 // Optimized sprite management functions
 void graphics_hide_all_sprites(void);
 void graphics_batch_move_sprites(const UINT8 *sprite_ids, const UINT8 *x_positions, const UINT8 *y_positions, UINT8 count);
-void graphics_draw_window_text(UINT8 x, UINT8 y, const char *text);
 
 void graphics_draw_text(UINT8 x, UINT8 y, const char *text);
 
