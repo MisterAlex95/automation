@@ -60,12 +60,12 @@ void menu_handle_input(UINT8 keys, UINT8 keys_prev)
         if (keys & J_UP && !(keys_prev & J_UP))
         {
             if (game.selected_tile > 0)
-                game.selected_tile = (game.selected_tile - 1) % SPRITE_VRAM_INDEX_TOTAL;
+                game.selected_tile = (game.selected_tile - 1) % TILE_TYPE_COUNT;
             menu_show_tile_selection();
         }
         if (keys & J_DOWN && !(keys_prev & J_DOWN))
         {
-            game.selected_tile = (game.selected_tile + 1) % SPRITE_VRAM_INDEX_TOTAL;
+            game.selected_tile = (game.selected_tile + 1) % TILE_TYPE_COUNT;
             menu_show_tile_selection();
         }
         if (keys & J_A && !(keys_prev & J_A))

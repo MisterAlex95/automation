@@ -62,6 +62,9 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE dire
         mapBackground[tile_index] = BG_EMPTY;
         break;
     case TILE_TYPE_CONVEYOR:
+        if (mapBackground[tile_index] != BG_EMPTY)
+            break;
+
         if (direction == DIRECTION_UP)
             mapBackground[tile_index] = BG_CONVEYOR_BELT_UP;
         else if (direction == DIRECTION_DOWN)
@@ -72,7 +75,8 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE dire
             mapBackground[tile_index] = BG_CONVEYOR_BELT_RIGHT;
         break;
     case TILE_TYPE_MINER:
-        mapBackground[tile_index] = BG_MINER;
+        if (mapBackground[tile_index] == BG_MINE)
+            mapBackground[tile_index] = BG_MINER;
         break;
     default:
         break;

@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "game_map.h"
 
+// Item
 void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
 {
     item_t *item = game_get_free_item_slot();
@@ -25,24 +26,6 @@ void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
     game_update_list_of_active_items();
 }
 
-void game_spawn_tile(UBYTE type, UINT8 x, UINT8 y)
-{
-    switch (type)
-    {
-    case TILE_TYPE_NONE:
-        game_map_place_tile(x, y, TILE_TYPE_NONE, 0);
-        break;
-    case TILE_TYPE_CONVEYOR:
-        game_map_place_tile(x, y, TILE_TYPE_CONVEYOR, game.cursor_direction);
-        break;
-    case TILE_TYPE_MINER:
-        game_map_place_tile(x, y, TILE_TYPE_MINER, game.cursor_direction);
-        break;
-    default:
-        break;
-    }
-}
-
 item_t *game_get_free_item_slot(void)
 {
     for (UBYTE i = 0; i < MAX_ITEMS; i++)
@@ -53,6 +36,25 @@ item_t *game_get_free_item_slot(void)
         }
     }
     return NULL;
+}
+
+void game_spawn_tile(UBYTE type, UINT8 x, UINT8 y)
+{
+    switch (type)
+    {
+    case TILE_TYPE_NONE:
+        // game_map_place_tile(x, y, TILE_TYPE_NONE, 0);
+        // Nothing to do.
+        break;
+    case TILE_TYPE_CONVEYOR:
+        game_map_place_tile(x, y, TILE_TYPE_CONVEYOR, game.cursor_direction);
+        break;
+    case TILE_TYPE_MINER:
+        game_map_place_tile(x, y, TILE_TYPE_MINER, game.cursor_direction);
+        break;
+    default:
+        break;
+    }
 }
 
 void game_conveyor_belt_update(void)
