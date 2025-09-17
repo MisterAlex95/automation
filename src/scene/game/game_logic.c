@@ -7,7 +7,7 @@
 #include "game_map.h"
 
 // Item
-void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
+void game_spawn_item(UBYTE type, UINT8 x, UINT8 y, UBYTE direction)
 {
     item_t *item = game_get_free_item_slot();
     if (!item)
@@ -16,6 +16,7 @@ void game_spawn_item(UBYTE type, UINT8 x, UINT8 y)
     item->type = type;
     item->pos_x = x * TILE_SIZE;
     item->pos_y = y * TILE_SIZE;
+    item->direction = direction;
     item->sprite_id = item->id + ITEMS_VRAM_INDEX_TOTAL;
 
     game_map_place_item_on_tile(item->id, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
@@ -105,5 +106,47 @@ void game_conveyor_belt_update(void)
             item->pos_y = new_y;
 
         game_map_place_item_on_tile(item->id, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
+    }
+}
+
+void game_miners_update(void)
+{
+    miner_t *miners = get_miners();
+    for (UBYTE i = 0; i < MAX_MINERS; i++)
+    {
+        if (miners[i].active != 1)
+            continue;
+
+        if (miners[i].rate == 0)
+            continue;
+
+        if (miners[i].cooldown > 0)
+        {
+            miners[i].cooldown--;
+            continue;
+        }
+
+        miners[i].cooldown = miners[i].rate;
+
+        UBYTE spawn_x = miners[i].tile_x;
+        UBYTE spawn_y = miners[i].tile_y;
+
+        switch (miners[i].direction)
+        {
+        case DIRECTION_RIGHT:
+            spawn_x += 1;
+            break;
+        case DIRECTION_LEFT:
+            spawn_x -= 1;
+            break;
+        case DIRECTION_UP:
+            spawn_y -= 1;
+            break;
+        case DIRECTION_DOWN:
+            spawn_y += 1;
+            break;
+        }
+
+        game_spawn_item(ITEM_TYPE_INGOT, spawn_x, spawn_y, miners[i].direction);
     }
 }

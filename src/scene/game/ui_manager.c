@@ -9,6 +9,7 @@ void ui_draw_hud(void)
     ui_draw_tile_info_under_cursor();
     ui_draw_nbr_active_items();
     ui_cursor_position();
+    ui_draw_miner_x_info(0);
     // ui_draw_item_x_info(0);
     // ui_draw_timer();
 }
@@ -25,6 +26,14 @@ void ui_cursor_position(void)
     char buf[32];
     sprintf(buf, "(%d,%d)  ", game.cursor_x, game.cursor_y);
     graphics_draw_text(0, SCREEN_TILE_HEIGHT - 3, buf);
+}
+
+void ui_draw_miner_x_info(UBYTE x)
+{
+    miner_t *m = &get_miners()[x];
+    char buf[32];
+    sprintf(buf, "(%d,%d) R:%d C:%d", m->tile_x, m->tile_y, m->rate, m->cooldown);
+    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 4, buf);
 }
 
 void ui_draw_nbr_active_items(void)
