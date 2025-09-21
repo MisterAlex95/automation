@@ -11,6 +11,7 @@
 #include "ui_manager.h"
 #include "game_logic.h"
 #include "scene_menu.h"
+#include "game_cursor.h"
 
 static void load(void)
 {
@@ -36,6 +37,7 @@ static void update(void)
   }
 
   display_items();
+  game_display_cursor();
   ui_draw_hud();
 }
 

@@ -20,6 +20,7 @@ void game_init(void)
         game.items[i].id = i;
         game.items[i].direction = DIRECTION_UP;
     }
+
     game.cursor_x = 5;
     game.cursor_y = 5;
     game.cursor_direction = DIRECTION_RIGHT;
@@ -34,7 +35,7 @@ void game_init(void)
         miners[i].tile_x = 0;
         miners[i].tile_y = 0;
         miners[i].direction = DIRECTION_UP;
-        miners[i].rate = 600;
+        miners[i].rate = 200;
         miners[i].cooldown = 0;
     }
 

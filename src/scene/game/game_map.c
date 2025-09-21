@@ -83,7 +83,7 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE dire
             m[game.miner_count].tile_x = tile_x;
             m[game.miner_count].tile_y = tile_y;
             m[game.miner_count].direction = direction;
-            m[game.miner_count].rate = 600;
+            m[game.miner_count].rate = 200;
             m[game.miner_count].cooldown = 0;
             game.miner_count = (game.miner_count + 1) % MAX_MINERS;
         }

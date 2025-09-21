@@ -16,8 +16,10 @@ void game_move_cursor(int dx, int dy)
 
     if (game.cursor_y >= MAP_HEIGHT)
         game.cursor_y = MAP_HEIGHT - 1;
+}
 
-    // Update cursor sprite position
+void game_display_cursor(void)
+{
     UINT8 sprite_x = game.cursor_x * TILE_SIZE;
     UINT8 sprite_y = game.cursor_y * TILE_SIZE;
     graphics_move_sprite(UI_SPRITE_CURSOR, sprite_x, sprite_y);
