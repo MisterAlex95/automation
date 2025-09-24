@@ -11,8 +11,9 @@
 #define BG_CONVEYOR_BELT_UP 4
 #define BG_MINER 5
 #define BG_MINE 6
+#define BG_CHEST 7
 
-#define SPRITE_VRAM_INDEX_TOTAL 7
+#define SPRITE_VRAM_INDEX_TOTAL 8
 
 extern const unsigned char mapTiles[];
 extern unsigned char mapBackground[];

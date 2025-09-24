@@ -32,6 +32,7 @@ static void update(void)
 {
   if (game.paused == 0)
   {
+    game_chest_update();
     game_conveyor_belt_update();
     game_miners_update();
   }

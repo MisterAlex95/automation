@@ -88,6 +88,11 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE dire
             game.miner_count = (game.miner_count + 1) % MAX_MINERS;
         }
         break;
+    case TILE_TYPE_CHEST:
+        if (mapBackground[tile_index] != BG_EMPTY)
+            break;
+        mapBackground[tile_index] = BG_CHEST;
+        break;
     default:
         break;
     }

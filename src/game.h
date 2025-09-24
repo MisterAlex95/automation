@@ -10,8 +10,9 @@
 #define TILE_TYPE_NONE 0
 #define TILE_TYPE_CONVEYOR 1
 #define TILE_TYPE_MINER 2
+#define TILE_TYPE_CHEST 3
 
-#define TILE_TYPE_COUNT 3
+#define TILE_TYPE_COUNT 4
 
 #define ITEM_TYPE_NONE 0
 #define ITEM_TYPE_INGOT 1

@@ -54,6 +54,9 @@ void game_spawn_tile(UBYTE type, UINT8 x, UINT8 y)
     case TILE_TYPE_MINER:
         game_map_place_tile(x, y, TILE_TYPE_MINER, game.cursor_direction);
         break;
+    case TILE_TYPE_CHEST:
+        game_map_place_tile(x, y, TILE_TYPE_CHEST, 0);
+        break;
     default:
         break;
     }
@@ -187,5 +190,34 @@ void game_miners_update(void)
         {
             game_spawn_item(ITEM_TYPE_INGOT, spawn_x, spawn_y, miners[i].direction);
         }
+    }
+}
+
+void game_chest_update(void)
+{
+    UBYTE *activeItemsIds = game_get_active_items();
+
+    for (UBYTE i = 0; activeItemsIds[i] < 0xFF; i++)
+    {
+        item_t *item = &game.items[activeItemsIds[i]];
+        if (item->type == ITEM_TYPE_NONE)
+            continue;
+
+        UBYTE item_x_pos = item->pos_x - DEVICE_SPRITE_PX_OFFSET_X +
+                           (item->direction == DIRECTION_RIGHT ? 0 : TILE_SIZE - 1);
+        UBYTE item_y_pos = item->pos_y - DEVICE_SPRITE_PX_OFFSET_Y +
+                           (item->direction == DIRECTION_DOWN ? 0 : TILE_SIZE - 1);
+
+        UBYTE tile_type = game_map_get_tile_at_position(item_x_pos, item_y_pos);
+
+        if (tile_type != BG_CHEST)
+            continue;
+
+        game_map_remove_item_from_tile(item->id, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
+
+        graphics_hide_sprite(item->sprite_id);
+        item->type = ITEM_TYPE_NONE;
+
+        game_update_list_of_active_items();
     }
 }
