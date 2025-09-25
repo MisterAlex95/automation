@@ -12,8 +12,9 @@
 #define BG_MINER 5
 #define BG_MINE 6
 #define BG_CHEST 7
+#define BG_WALL 8
 
-#define SPRITE_VRAM_INDEX_TOTAL 8
+#define SPRITE_VRAM_INDEX_TOTAL 9
 
 extern const unsigned char mapTiles[];
 extern unsigned char mapBackground[];

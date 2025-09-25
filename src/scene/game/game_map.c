@@ -61,6 +61,11 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE dire
     case TILE_TYPE_NONE:
         mapBackground[tile_index] = BG_EMPTY;
         break;
+    case TILE_TYPE_WALL:
+        if (mapBackground[tile_index] != BG_EMPTY)
+            break;
+        mapBackground[tile_index] = BG_WALL;
+        break;
     case TILE_TYPE_CONVEYOR:
         if (mapBackground[tile_index] != BG_EMPTY)
             break;

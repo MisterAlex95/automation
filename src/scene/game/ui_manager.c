@@ -32,7 +32,7 @@ void ui_draw_miner_x_info(UBYTE x)
 {
     miner_t *m = &get_miners()[x];
     char buf[32];
-    sprintf(buf, "(%d,%d) R:%d C:%d", m->tile_x, m->tile_y, m->rate, m->cooldown);
+    sprintf(buf, "(%d,%d) R:%d C:%d  ", m->tile_x, m->tile_y, m->rate, m->cooldown);
     graphics_draw_text(0, SCREEN_TILE_HEIGHT - 4, buf);
 }
 
