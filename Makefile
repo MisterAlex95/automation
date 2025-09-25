@@ -17,10 +17,25 @@ SRC_UTILS_DIR = src/utils
 SRC_ASSETS_DIR = src/assets
 
 # ============================================================================
-# GBDK CONFIGURATION
+# OS DETECTION AND GBDK CONFIGURATION
 # ============================================================================
 
-GBDK_HOME = /Users/alex/gbdk
+# Detect operating system
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    # Linux configuration
+    GBDK_HOME = /home/alex/gbdk
+    OPEN_CMD = xdg-open
+else ifeq ($(UNAME_S),Darwin)
+    # macOS configuration
+    GBDK_HOME = /Users/alex/gbdk
+    OPEN_CMD = open
+else
+    # Default to Linux if unknown
+    GBDK_HOME = /home/alex/gbdk
+    OPEN_CMD = xdg-open
+endif
+
 CC = $(GBDK_HOME)/bin/lcc
 AS = $(GBDK_HOME)/bin/lcc
 OBJCOPY = $(GBDK_HOME)/bin/objcopy
@@ -53,7 +68,7 @@ SOURCES = \
 # COMPILER FLAGS
 # ============================================================================
 
-CFLAGS = -Wa-l -Wl-m -Wl-j -I$(SRC_DIR) \
+CFLAGS = -Wa-l -Wl-m -Wl-j -I$(GBDK_HOME)/include -I$(SRC_DIR) \
 	-I$(SRC_ENGINE_DIR) \
 	-I$(SRC_SYSTEM_DIR) \
 	-I$(SRC_SCENE_GAME) \
@@ -83,7 +98,7 @@ clean:
 
 # Run in emulator (requires an emulator like SameBoy, BGB, or VBA)
 run: $(BUILD_DIR)/$(PROJECT).gb
-	open $(BUILD_DIR)/$(PROJECT).gb
+	/snap/bin/sameboy $(BUILD_DIR)/$(PROJECT).gb
 
 # Debug build with additional symbols
 debug: CFLAGS += -Wl-y
