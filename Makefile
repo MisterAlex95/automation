@@ -25,7 +25,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     # Linux configuration
     GBDK_HOME = /home/alex/gbdk
-    OPEN_CMD = xdg-open
+    OPEN_CMD = /snap/bin/sameboy
 else ifeq ($(UNAME_S),Darwin)
     # macOS configuration
     GBDK_HOME = /Users/alex/gbdk
@@ -98,7 +98,7 @@ clean:
 
 # Run in emulator (requires an emulator like SameBoy, BGB, or VBA)
 run: $(BUILD_DIR)/$(PROJECT).gb
-	/snap/bin/sameboy $(BUILD_DIR)/$(PROJECT).gb
+	${OPEN_CMD} $(BUILD_DIR)/$(PROJECT).gb
 
 # Debug build with additional symbols
 debug: CFLAGS += -Wl-y
