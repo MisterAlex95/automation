@@ -1,12 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-typedef enum
-{
-    MENU_NONE,
-    MENU_TILE_SELECTION,
-    MENU_ORIENTATION_SELECTION
-} MenuState;
+#include "constants.h"
 
 void menu_show_tile_selection(void);
 void menu_show_orientation_selection(void);

@@ -22,9 +22,9 @@ void game_init(void)
         game.items[i].direction = DIRECTION_UP;
     }
 
-    game.cursor_x = 5;
-    game.cursor_y = 5;
-    game.cursor_direction = DIRECTION_RIGHT;
+    game.cursor_x = INITIAL_CURSOR_X;
+    game.cursor_y = INITIAL_CURSOR_Y;
+    game.cursor_direction = INITIAL_CURSOR_DIRECTION;
     game.paused = 0;
     game.menu_state = MENU_NONE;
     game.selected_tile = TILE_TYPE_NONE;
@@ -36,8 +36,8 @@ void game_init(void)
         miners[i].tile_x = 0;
         miners[i].tile_y = 0;
         miners[i].direction = DIRECTION_UP;
-        miners[i].rate = 200;
-        miners[i].cooldown = 0;
+        miners[i].rate = MINER_DEFAULT_RATE;
+        miners[i].cooldown = MINER_DEFAULT_COOLDOWN;
     }
 
     game_update_list_of_active_items();
