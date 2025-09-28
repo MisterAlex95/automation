@@ -71,7 +71,7 @@ void conveyor_move_item(item_t *item)
         UBYTE new_tile_y = new_y / TILE_SIZE;
 
         UBYTE item_count;
-        UBYTE *items_on_tile = game_map_get_items_on_tile(new_tile_x, new_tile_y, &item_count);
+        game_map_get_items_on_tile(new_tile_x, new_tile_y, &item_count);
 
         if (item_count > 0)
         {

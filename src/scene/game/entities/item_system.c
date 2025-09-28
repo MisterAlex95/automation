@@ -19,15 +19,14 @@ item_t *item_spawn(UBYTE type, UINT8 x, UINT8 y, UBYTE direction)
 
     game_map_place_item_on_tile(item->id, x, y);
 
-    // Assign the correct tile based on item type
-    UINT8 tile_index = ITEM_INGOT_TILE;
+    UINT8 tile_index = (UINT8)ITEM_INGOT_TILE;
     switch (type)
     {
     case ITEM_TYPE_INGOT:
-        tile_index = ITEM_INGOT_TILE;
+        tile_index = (UINT8)ITEM_INGOT_TILE;
         break;
     default:
-        tile_index = ITEM_INGOT_TILE; // Fallback
+        tile_index = (UINT8)ITEM_INGOT_TILE;
         break;
     }
 

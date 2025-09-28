@@ -10,7 +10,7 @@ void render_display_items(void)
 
     UBYTE *activeItemsIds = game_get_active_items();
 
-    for (int i = 0; activeItemsIds[i] < 0xFF; i++)
+    for (UBYTE i = 0; activeItemsIds[i] < 0xFF; i++)
     {
         item_t *item = &game.items[activeItemsIds[i]];
         if (item->type != ITEM_TYPE_NONE)
@@ -26,6 +26,5 @@ void render_display_items(void)
 
 void render_update_item_positions(void)
 {
-    // Update sprite positions for all active items
     render_display_items();
 }

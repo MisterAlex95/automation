@@ -55,8 +55,8 @@ miner_t *get_miners(void)
 
 void game_update_list_of_active_items(void)
 {
-    int count = 0;
-    for (int i = 0; i < MAX_ITEMS; i++)
+    UBYTE count = 0;
+    for (UBYTE i = 0; i < MAX_ITEMS; i++)
     {
         if (game.items[i].type != ITEM_TYPE_NONE)
         {
