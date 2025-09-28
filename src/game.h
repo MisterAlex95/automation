@@ -3,6 +3,7 @@
 
 #include <gb/gb.h>
 #include <stdio.h>
+#include "assets/item.h"
 
 #define MAX_SCORE 9999
 #define MAX_ITEMS 39
@@ -15,8 +16,6 @@
 
 #define TILE_TYPE_COUNT 5
 
-#define ITEM_TYPE_NONE 0
-#define ITEM_TYPE_INGOT 1
 
 #define DIRECTION_UP 0
 #define DIRECTION_RIGHT 1

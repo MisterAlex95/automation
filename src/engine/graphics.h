@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 
 #include <gb/gb.h>
+#include "vram_layout.h"
 
 #define SCREEN_TILE_WIDTH 20
 #define SCREEN_TILE_HEIGHT 18
@@ -15,6 +16,12 @@ void graphics_init(void);
 void graphics_clear(void);
 void graphics_load_tiles(const unsigned char *tiles, UINT16 tile_count, UINT8 vram_index);
 void graphics_draw_background(const unsigned char *map, UINT8 width, UINT8 height);
+
+// Loading helpers functions
+void graphics_load_bg_tiles(const unsigned char *tiles, UINT8 count);
+void graphics_load_sprite_tiles(const unsigned char *tiles, UINT8 count);
+void graphics_load_ui_tiles(const unsigned char *tiles, UINT8 count);
+void graphics_load_font_tiles(const unsigned char *tiles, UINT8 count);
 
 // Sprite functions
 void graphics_load_sprite(const unsigned char *sprite_data, UINT8 vram_tile_index);

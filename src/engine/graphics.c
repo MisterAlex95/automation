@@ -115,3 +115,23 @@ void graphics_move_window(UINT8 x, UINT8 y)
     // WX_REG = x + 7; WY_REG = y;
     move_win(x, y);
 }
+
+void graphics_load_bg_tiles(const unsigned char *tiles, UINT8 count)
+{
+    graphics_load_tiles(tiles, count, TILE_FACTORY_START);
+}
+
+void graphics_load_sprite_tiles(const unsigned char *tiles, UINT8 count)
+{
+    graphics_load_sprites(tiles, TILE_ITEMS_START, count);
+}
+
+void graphics_load_ui_tiles(const unsigned char *tiles, UINT8 count)
+{
+    graphics_load_tiles(tiles, count, TILE_UI_START);
+}
+
+void graphics_load_font_tiles(const unsigned char *tiles, UINT8 count)
+{
+    graphics_load_tiles(tiles, count, TILE_FONT_START);
+}

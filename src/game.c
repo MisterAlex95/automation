@@ -4,6 +4,7 @@
 #include "graphics.h"
 #include "scene_menu.h"
 #include "menu.h"
+#include "engine/vram_layout.h"
 
 game_t game;
 static UBYTE active_items[MAX_ITEMS];
@@ -16,7 +17,7 @@ void game_init(void)
         game.items[i].type = ITEM_TYPE_NONE;
         game.items[i].pos_x = 0;
         game.items[i].pos_y = 0;
-        game.items[i].sprite_id = 0;
+        game.items[i].sprite_id = i + 1; // 0 is reserved for cursor
         game.items[i].id = i;
         game.items[i].direction = DIRECTION_UP;
     }

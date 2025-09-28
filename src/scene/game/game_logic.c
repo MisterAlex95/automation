@@ -5,6 +5,7 @@
 #include "graphics.h"
 #include "timer.h"
 #include "game_map.h"
+#include "vram_layout.h"
 
 // Item
 item_t *game_spawn_item(UBYTE type, UINT8 x, UINT8 y, UBYTE direction)
@@ -17,11 +18,23 @@ item_t *game_spawn_item(UBYTE type, UINT8 x, UINT8 y, UBYTE direction)
     item->pos_x = x * TILE_SIZE;
     item->pos_y = y * TILE_SIZE;
     item->direction = direction;
-    item->sprite_id = item->id + ITEMS_VRAM_INDEX_TOTAL;
+    item->sprite_id = item->id + 1; // 0 is reserved for cursor
 
     game_map_place_item_on_tile(item->id, x, y);
 
-    graphics_assign_sprite(item->sprite_id, ITEMS_VRAM_INDEX_TOTAL);
+    // Assign the correct tile based on item type
+    UINT8 tile_index = ITEM_INGOT_TILE;
+    switch (type)
+    {
+    case ITEM_TYPE_INGOT:
+        tile_index = ITEM_INGOT_TILE;
+        break;
+    default:
+        tile_index = ITEM_INGOT_TILE; // Fallback
+        break;
+    }
+
+    graphics_assign_sprite(item->sprite_id, tile_index);
     graphics_move_sprite(item->sprite_id, item->pos_x, item->pos_y);
 
     game_update_list_of_active_items();
