@@ -1,7 +1,7 @@
 #include "ui_manager.h"
 #include "graphics.h"
 #include "game.h"
-#include "game_map.h"
+#include "../world/game_map.h"
 #include "timer.h"
 
 void ui_draw_hud(void)

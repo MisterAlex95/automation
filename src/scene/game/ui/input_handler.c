@@ -1,9 +1,9 @@
 #include "input_handler.h"
 #include "game_cursor.h"
-#include "game_logic.h"
+#include "../core/game_logic.h"
 #include "graphics.h"
 #include "game.h"
-#include "menu.h"
+#include "menu/menu.h"
 #include "map.h"
 
 void input_handle_game_input(UINT8 keys, UINT8 keys_prev)

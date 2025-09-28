@@ -4,7 +4,7 @@
 #include "item.h"
 #include "graphics.h"
 #include "timer.h"
-#include "game_map.h"
+#include "../world/game_map.h"
 #include "vram_layout.h"
 
 // Item

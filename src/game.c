@@ -3,7 +3,7 @@
 #include "input.h"
 #include "graphics.h"
 #include "scene_menu.h"
-#include "menu.h"
+#include "scene/game/ui/menu/menu.h"
 #include "engine/vram_layout.h"
 
 game_t game;

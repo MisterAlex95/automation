@@ -4,7 +4,7 @@
 #include "input.h"
 #include "game.h"
 #include "math.h"
-#include "scene_game.h"
+#include "../game/core/scene_game.h"
 
 static UINT8 blink = 0;
 static UINT8 show_title = 1;

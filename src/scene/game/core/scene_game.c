@@ -1,17 +1,17 @@
 #include <gb/gb.h>
 #include "scene_game.h"
-#include "menu.h"
+#include "../ui/menu/menu.h"
 #include "game.h"
 #include "graphics.h"
 #include "timer.h"
 #include "map.h"
 #include "item.h"
 #include "ui.h"
-#include "input_handler.h"
-#include "ui_manager.h"
+#include "../ui/input_handler.h"
+#include "../ui/ui_manager.h"
 #include "game_logic.h"
 #include "scene_menu.h"
-#include "game_cursor.h"
+#include "../ui/game_cursor.h"
 
 static void load(void)
 {
