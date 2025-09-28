@@ -12,6 +12,7 @@
 #include "game_logic.h"
 #include "scene_menu.h"
 #include "../ui/game_cursor.h"
+#include "../systems/render_system.h"
 
 static void load(void)
 {
@@ -53,25 +54,7 @@ static void unload(void)
 
 void display_items(void)
 {
-  UINT8 sprite_ids[MAX_ITEMS] = {0};
-  UINT8 x_positions[MAX_ITEMS] = {0};
-  UINT8 y_positions[MAX_ITEMS] = {0};
-  UINT8 count = 0;
-
-  UBYTE *activeItemsIds = game_get_active_items();
-
-  for (int i = 0; activeItemsIds[i] < 0xFF; i++)
-  {
-    item_t *item = &game.items[activeItemsIds[i]];
-    if (item->type != ITEM_TYPE_NONE)
-    {
-      sprite_ids[count] = item->sprite_id;
-      x_positions[count] = item->pos_x;
-      y_positions[count] = item->pos_y;
-      count++;
-    }
-  }
-  graphics_batch_move_sprites(sprite_ids, x_positions, y_positions, count);
+    render_display_items();
 }
 
 static void handle_input(UINT8 keys, UINT8 keys_prev)

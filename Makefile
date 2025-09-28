@@ -59,6 +59,11 @@ SOURCES = \
 	$(SRC_SCENE_GAME)/ui/ui_manager.c \
 	$(SRC_SCENE_GAME)/world/game_map.c \
 	$(SRC_SCENE_GAME)/ui/menu/menu.c \
+	$(SRC_SCENE_GAME)/entities/item_system.c \
+	$(SRC_SCENE_GAME)/entities/miner_system.c \
+	$(SRC_SCENE_GAME)/systems/conveyor_system.c \
+	$(SRC_SCENE_GAME)/systems/chest_system.c \
+	$(SRC_SCENE_GAME)/systems/render_system.c \
 	$(SRC_ASSETS_DIR)/map.c \
 	$(SRC_ASSETS_DIR)/item.c \
 	$(SRC_ASSETS_DIR)/ui.c \
