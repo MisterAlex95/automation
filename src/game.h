@@ -9,7 +9,7 @@
 typedef struct {
   UBYTE id;
   UBYTE direction;
-  UBYTE pos_x, pos_y;
+  UINT16 world_x, world_y;
   UBYTE type;
   UBYTE sprite_id;
 } item_t;

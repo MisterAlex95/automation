@@ -1,6 +1,7 @@
 #include "game_cursor.h"
-#include "camera.h"
+#include "cursor_camera_controller.h"
 #include "constants.h"
+#include "camera.h"
 
 void game_move_cursor(int dx, int dy)
 {
@@ -16,43 +17,16 @@ void game_move_cursor(int dx, int dy)
     if (new_y > MAP_HEIGHT - 1)
         new_y = MAP_HEIGHT - 1;
 
-    if (dx != 0)
-    {
-        int dead_start_x = CAMERA_DEAD_ZONE_X_START;
-        int dead_end_x = CAMERA_DEAD_ZONE_X_END;
-
-        if (new_x < dead_start_x && camera_x > 0)
-        {
-            camera_update(dx, 0);
-        }
-        else if (new_x > dead_end_x && camera_x < MAP_WIDTH_PIXEL - SCREEN_WIDTH)
-        {
-            camera_update(dx, 0);
-        }
-        else
-        {
-            game.cursor_x = new_x;
-        }
-    }
-
-    if (dy != 0)
-    {
-        int dead_start_y = CAMERA_DEAD_ZONE_Y_START;
-        int dead_end_y = CAMERA_DEAD_ZONE_Y_END;
-
-        if (new_y < dead_start_y && camera_y > 0)
-        {
-            camera_update(0, dy);
-        }
-        else if (new_y > dead_end_y && camera_y < MAP_HEIGHT_PIXEL - SCREEN_HEIGHT)
-        {
-            camera_update(0, dy);
-        }
-        else
-        {
-            game.cursor_y = new_y;
-        }
-    }
+    cursor_camera_handle_movement(dx, dy, &game.cursor_x, &game.cursor_y);
+    
+    if (game.cursor_x < SCREEN_X_OFFSET)
+        game.cursor_x = SCREEN_X_OFFSET;
+    if (game.cursor_y < SCREEN_Y_OFFSET)
+        game.cursor_y = SCREEN_Y_OFFSET;
+    if (game.cursor_x >= SCREEN_TILE_WIDTH)
+        game.cursor_x = SCREEN_TILE_WIDTH - 1;
+    if (game.cursor_y >= SCREEN_TILE_HEIGHT)
+        game.cursor_y = SCREEN_TILE_HEIGHT - 1;
 }
 
 void game_display_cursor(void)
@@ -60,6 +34,11 @@ void game_display_cursor(void)
     UINT8 sprite_x = game.cursor_x * TILE_SIZE;
     UINT8 sprite_y = game.cursor_y * TILE_SIZE;
     graphics_move_sprite(UI_SPRITE_CURSOR, sprite_x, sprite_y);
+}
+
+void game_center_cursor(void)
+{
+    cursor_camera_center_cursor(&game.cursor_x, &game.cursor_y);
 }
 
 UINT8 game_get_cursor_x(void)

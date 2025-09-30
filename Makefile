@@ -55,6 +55,7 @@ SOURCES = \
 	$(SRC_SCENE_MENU)/scene_menu.c \
 	$(SRC_SCENE_GAME)/core/game_logic.c \
 	$(SRC_SCENE_GAME)/ui/game_cursor.c \
+	$(SRC_SCENE_GAME)/ui/cursor_camera_controller.c \
 	$(SRC_SCENE_GAME)/ui/input_handler.c \
 	$(SRC_SCENE_GAME)/core/scene_game.c \
 	$(SRC_SCENE_GAME)/ui/ui_manager.c \

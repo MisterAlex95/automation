@@ -3,6 +3,7 @@
 #include "../world/game_map.h"
 #include "map.h"
 #include "constants.h"
+#include "camera.h"
 
 void conveyor_update_all_items(void)
 {
@@ -20,9 +21,9 @@ void conveyor_update_all_items(void)
 
 void conveyor_move_item(item_t *item)
 {
-    UBYTE item_x_pos = item->pos_x - DEVICE_SPRITE_PX_OFFSET_X +
+    UBYTE item_x_pos = item->world_x - DEVICE_SPRITE_PX_OFFSET_X +
                        (item->direction == DIRECTION_RIGHT ? 0 : TILE_SIZE - 1);
-    UBYTE item_y_pos = item->pos_y - DEVICE_SPRITE_PX_OFFSET_Y +
+    UBYTE item_y_pos = item->world_y - DEVICE_SPRITE_PX_OFFSET_Y +
                        (item->direction == DIRECTION_DOWN ? 0 : TILE_SIZE - 1);
 
     UBYTE tile_type = game_map_get_tile_at_position(item_x_pos, item_y_pos);
@@ -49,8 +50,8 @@ void conveyor_move_item(item_t *item)
         break;
     default:
     {
-        UBYTE new_tile_x = (item->pos_x + 1) / TILE_SIZE;
-        UBYTE new_tile_y = (item->pos_y + 1) / TILE_SIZE;
+        UBYTE new_tile_x = world_to_tile_x(item->world_x);
+        UBYTE new_tile_y = world_to_tile_y(item->world_y);
 
         UBYTE item_count;
         game_map_get_items_on_tile(new_tile_x, new_tile_y, &item_count);
@@ -63,8 +64,8 @@ void conveyor_move_item(item_t *item)
     }
     }
 
-    UBYTE new_x = item->pos_x + dx;
-    UBYTE new_y = item->pos_y + dy;
+    UINT16 new_x = item->world_x + dx;
+    UINT16 new_y = item->world_y + dy;
 
     if ((new_x % TILE_SIZE == 0) && (new_y % TILE_SIZE == 0))
     {
@@ -79,14 +80,14 @@ void conveyor_move_item(item_t *item)
             return;
         }
 
-        game_map_remove_item_from_tile(item->id, item->pos_x / TILE_SIZE, item->pos_y / TILE_SIZE);
-        item->pos_x = new_x;
-        item->pos_y = new_y;
+        game_map_remove_item_from_tile(item->id, world_to_tile_x(item->world_x), world_to_tile_y(item->world_y));
+        item->world_x = new_x;
+        item->world_y = new_y;
         game_map_place_item_on_tile(item->id, new_tile_x, new_tile_y);
     }
     else
     {
-        item->pos_x = new_x;
-        item->pos_y = new_y;
+        item->world_x = new_x;
+        item->world_y = new_y;
     }
 }

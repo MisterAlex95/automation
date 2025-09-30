@@ -2,6 +2,7 @@
 #include "../entities/item_system.h"
 #include "../world/game_map.h"
 #include "map.h"
+#include "camera.h"
 
 void chest_update_all_items(void)
 {
@@ -19,9 +20,9 @@ void chest_update_all_items(void)
 
 void chest_process_item(item_t *item)
 {
-    UBYTE item_x_pos = item->pos_x - DEVICE_SPRITE_PX_OFFSET_X +
+    UBYTE item_x_pos = item->world_x - DEVICE_SPRITE_PX_OFFSET_X +
                        (item->direction == DIRECTION_RIGHT ? 0 : TILE_SIZE - 1);
-    UBYTE item_y_pos = item->pos_y - DEVICE_SPRITE_PX_OFFSET_Y +
+    UBYTE item_y_pos = item->world_y - DEVICE_SPRITE_PX_OFFSET_Y +
                        (item->direction == DIRECTION_DOWN ? 0 : TILE_SIZE - 1);
 
     UBYTE tile_type = game_map_get_tile_at_position(item_x_pos, item_y_pos);

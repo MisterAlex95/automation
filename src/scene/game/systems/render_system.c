@@ -1,5 +1,6 @@
 #include "render_system.h"
 #include "graphics.h"
+#include "camera.h"
 
 void render_display_items(void)
 {
@@ -16,8 +17,8 @@ void render_display_items(void)
         if (item->type != ITEM_TYPE_NONE)
         {
             sprite_ids[count] = item->sprite_id;
-            x_positions[count] = item->pos_x;
-            y_positions[count] = item->pos_y;
+            x_positions[count] = world_to_screen_x(item->world_x);
+            y_positions[count] = world_to_screen_y(item->world_y);
             count++;
         }
     }

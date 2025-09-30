@@ -15,8 +15,8 @@ void game_init(void)
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         game.items[i].type = ITEM_TYPE_NONE;
-        game.items[i].pos_x = 0;
-        game.items[i].pos_y = 0;
+        game.items[i].world_x = 0;
+        game.items[i].world_y = 0;
         game.items[i].sprite_id = i + 1; // 0 is reserved for cursor
         game.items[i].id = i;
         game.items[i].direction = DIRECTION_UP;
