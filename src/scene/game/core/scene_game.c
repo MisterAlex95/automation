@@ -13,9 +13,12 @@
 #include "scene_menu.h"
 #include "../ui/game_cursor.h"
 #include "../systems/render_system.h"
+#include "camera.h"
 
 static void load(void)
 {
+  camera_init();
+  
   // Load BG tiles
   graphics_load_bg_tiles(mapTiles, SPRITE_VRAM_INDEX_TOTAL);
   graphics_draw_background(mapBackground, MAP_WIDTH, MAP_HEIGHT);
