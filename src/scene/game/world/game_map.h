@@ -3,6 +3,7 @@
 
 #include "graphics.h"
 #include "map.h"
+#include "constants.h"
 
 #define MAX_ITEMS_PER_TILE 2
 

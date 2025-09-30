@@ -2,13 +2,9 @@
 #define GRAPHICS_H
 
 #include <gb/gb.h>
+#include "constants.h"
 #include "vram_layout.h"
 
-#define SCREEN_TILE_WIDTH 20
-#define SCREEN_TILE_HEIGHT 18
-#define TILE_SIZE 8
-
-#define MAX_SPRITES 40
 
 void graphics_init(void);
 

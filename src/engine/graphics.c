@@ -111,8 +111,6 @@ void graphics_hide_window(void)
 
 void graphics_move_window(UINT8 x, UINT8 y)
 {
-    // Offset
-    // WX_REG = x + 7; WY_REG = y;
     move_win(x, y);
 }
 

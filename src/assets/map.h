@@ -3,9 +3,6 @@
 
 #include "engine/vram_layout.h"
 
-#define MAP_WIDTH 10
-#define MAP_HEIGHT 10
-
 #define BG_EMPTY (TILE_FACTORY_START + 0)
 #define BG_CONVEYOR_BELT_RIGHT (TILE_FACTORY_START + 1)
 #define BG_CONVEYOR_BELT_DOWN (TILE_FACTORY_START + 2)

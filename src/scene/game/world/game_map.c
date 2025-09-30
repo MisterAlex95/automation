@@ -51,9 +51,6 @@ void game_map_clear_tile(UBYTE tile_x, UBYTE tile_y)
 void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type, UBYTE direction)
 {
     UBYTE x = tile_x - 1, y = tile_y - 2;
-    if (x >= MAP_WIDTH || y >= MAP_HEIGHT)
-        return;
-
     UBYTE tile_index = x + (y * MAP_WIDTH);
 
     switch (tile_type)

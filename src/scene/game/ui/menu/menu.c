@@ -4,7 +4,8 @@
 #include "graphics.h"
 #include "menu.h"
 
-void menu_show_tile_selection(void) {
+void menu_show_tile_selection(void)
+{
   game.menu_state = MENU_TILE_SELECTION;
   SHOW_WIN;
   move_win(7, 120);
@@ -17,7 +18,8 @@ void menu_show_tile_selection(void) {
   graphics_draw_text(0, 2, "A:OK B:Exit");
 }
 
-void menu_show_orientation_selection(void) {
+void menu_show_orientation_selection(void)
+{
   game.menu_state = MENU_ORIENTATION_SELECTION;
   SHOW_WIN;
   move_win(7, 120);
@@ -31,11 +33,7 @@ void menu_show_orientation_selection(void) {
   graphics_draw_text(0, 2, "A:OK B:Back");
 }
 
-void menu_clear(void) {
-  UINT8 blank = 0;
-  for (UINT8 y = 0; y < SCREEN_TILE_HEIGHT; y++) {
-    for (UINT8 x = 0; x < SCREEN_TILE_WIDTH; x++) {
-      set_win_tiles(x, y, 1, 1, &blank);
-    }
-  }
+void menu_clear(void)
+{
+  fill_win_rect(0, 0, 31, 31, ' ');
 }

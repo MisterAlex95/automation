@@ -3,13 +3,17 @@
 #include "game.h"
 #include "../world/game_map.h"
 #include "timer.h"
+#include "constants.h"
+#include "camera.h"
 
 void ui_draw_hud(void)
 {
-    ui_draw_tile_info_under_cursor();
-    ui_draw_nbr_active_items();
+    // ui_draw_tile_info_under_cursor();
+    // ui_draw_nbr_active_items();
     ui_cursor_position();
-    ui_draw_miner_x_info(0);
+    ui_draw_camera_debug();
+
+    // ui_draw_miner_x_info(0);
     // ui_draw_item_x_info(0);
     // ui_draw_timer();
 }
@@ -25,7 +29,7 @@ void ui_cursor_position(void)
 {
     char buf[32];
     sprintf(buf, "(%d,%d)  ", game.cursor_x, game.cursor_y);
-    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 3, buf);
+    graphics_draw_text((camera_x / TILE_SIZE) + 0, (camera_y / TILE_SIZE) + SCREEN_TILE_HEIGHT - 3, buf);
 }
 
 void ui_draw_miner_x_info(UBYTE x)
@@ -61,14 +65,21 @@ void ui_draw_item_x_info(UBYTE x)
 
 void ui_draw_tile_info_under_cursor(void)
 {
-    UBYTE cursor_pixel_x = (game.cursor_x * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_X;
-    UBYTE cursor_pixel_y = (game.cursor_y * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_Y;
-    
+    UBYTE cursor_pixel_x = (camera_x + game.cursor_x * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_X;
+    UBYTE cursor_pixel_y = (camera_y + game.cursor_y * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_Y;
+
     UBYTE tile = game_map_get_tile_at_position(cursor_pixel_x, cursor_pixel_y);
     UBYTE out_count = 0;
-    game_map_get_items_on_tile(game.cursor_x, game.cursor_y, &out_count);
+    game_map_get_items_on_tile((camera_y / TILE_SIZE) + game.cursor_x, (camera_y / TILE_SIZE) + game.cursor_y, &out_count);
 
     char buf[32];
     sprintf(buf, "Tile: %d (%d items) ", tile, out_count);
     graphics_draw_text(0, SCREEN_TILE_HEIGHT - 1, buf);
+}
+
+void ui_draw_camera_debug(void)
+{
+    char buf[32];
+    sprintf(buf, "Cam:(%d,%d)", camera_x, camera_y);
+    graphics_draw_text((camera_x / TILE_SIZE) + 0, (camera_y / TILE_SIZE) + SCREEN_TILE_HEIGHT - 4, buf);
 }

@@ -1,6 +1,7 @@
 #include "miner_system.h"
 #include "item_system.h"
 #include "../world/game_map.h"
+#include "constants.h"
 
 void miner_update_all(void)
 {

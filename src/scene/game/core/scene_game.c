@@ -54,7 +54,7 @@ static void unload(void)
 
 void display_items(void)
 {
-    render_display_items();
+  render_display_items();
 }
 
 static void handle_input(UINT8 keys, UINT8 keys_prev)

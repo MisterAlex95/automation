@@ -5,6 +5,8 @@
 #include "game.h"
 #include "menu/menu.h"
 #include "map.h"
+#include "camera.h"
+#include "constants.h"
 
 void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
 {
@@ -32,7 +34,7 @@ void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
 
     if (keys & J_A && !(keys_prev & J_A))
     {
-        game_spawn_tile(game.selected_tile, game_get_cursor_x(), game_get_cursor_y());
+        game_spawn_tile(game.selected_tile, (camera_x / TILE_SIZE) + game_get_cursor_x(), (camera_y / TILE_SIZE) + game_get_cursor_y());
     }
     else if (keys & J_B && !(keys_prev & J_B))
     {

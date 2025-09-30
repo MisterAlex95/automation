@@ -30,6 +30,9 @@ void game_spawn_tile(UBYTE type, UINT8 x, UINT8 y)
         // game_map_place_tile(x, y, TILE_TYPE_NONE, 0);
         // Nothing to do.
         break;
+    case TILE_TYPE_WALL:
+        game_map_place_tile(x, y, TILE_TYPE_WALL, game.cursor_direction);
+        break;
     case TILE_TYPE_CONVEYOR:
         game_map_place_tile(x, y, TILE_TYPE_CONVEYOR, game.cursor_direction);
         break;

@@ -48,6 +48,7 @@ SOURCES = \
 	$(SRC_DIR)/main.c \
 	$(SRC_DIR)/game.c \
 	$(SRC_SYSTEM_DIR)/scene.c \
+	$(SRC_ENGINE_DIR)/camera.c \
 	$(SRC_ENGINE_DIR)/graphics.c \
 	$(SRC_ENGINE_DIR)/timer.c \
 	$(SRC_ENGINE_DIR)/input.c \

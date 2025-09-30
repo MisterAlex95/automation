@@ -2,6 +2,7 @@
 #include "../entities/item_system.h"
 #include "../world/game_map.h"
 #include "map.h"
+#include "constants.h"
 
 void conveyor_update_all_items(void)
 {
