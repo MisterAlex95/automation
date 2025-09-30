@@ -24,10 +24,10 @@ static void load(void)
   graphics_draw_background(mapBackground, MAP_WIDTH, MAP_HEIGHT);
 
   // Load UI and item tiles
-  graphics_load_ui_tiles(cursorTile, 1);
+  graphics_load_ui_tiles(UITiles, UI_TILES_COUNT);
   graphics_load_sprite_tiles(itemsTiles, ITEMS_VRAM_INDEX_TOTAL);
 
-  graphics_assign_sprite(UI_SPRITE_CURSOR, TILE_UI_START);
+  graphics_assign_sprite(UI_SPRITE_CURSOR, UI_CURSOR);
   graphics_hide_all_sprites();
 
   graphics_move_sprite(UI_SPRITE_CURSOR, game.cursor_x, game.cursor_y);
