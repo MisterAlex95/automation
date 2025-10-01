@@ -1,7 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "engine/vram_layout.h"
+#include "../engine/vram_layout.h"
 
 #define BG_EMPTY (TILE_FACTORY_START + 0)
 #define BG_CONVEYOR_BELT_RIGHT (TILE_FACTORY_START + 1)
