@@ -27,7 +27,7 @@ static void load(void)
   graphics_load_ui_tiles(UITiles, UI_TILES_COUNT);
   graphics_load_sprite_tiles(itemsTiles, ITEMS_VRAM_INDEX_TOTAL);
 
-  graphics_assign_sprite(UI_SPRITE_CURSOR, UI_CURSOR);
+  graphics_assign_sprite(UI_SPRITE_CURSOR, (UINT8)UI_CURSOR);
   graphics_hide_all_sprites();
 
   graphics_move_sprite(UI_SPRITE_CURSOR, game.cursor_x, game.cursor_y);

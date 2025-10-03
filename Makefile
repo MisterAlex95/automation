@@ -77,6 +77,10 @@ SOURCES = \
 # COMPILER FLAGS
 # ============================================================================
 
+// 110: unused parameter
+// 158: unused variable
+WARNING_FLAGS = -Wf--disable-warning=110 -Wf--disable-warning=158
+
 CFLAGS = -Wa-l -Wl-m -Wl-j -I$(GBDK_HOME)/include -I$(SRC_DIR) \
 	-I$(SRC_ENGINE_DIR) \
 	-I$(SRC_SYSTEM_DIR) \
@@ -84,11 +88,12 @@ CFLAGS = -Wa-l -Wl-m -Wl-j -I$(GBDK_HOME)/include -I$(SRC_DIR) \
 	-I$(SRC_SCENE_GAME)/menu \
 	-I$(SRC_SCENE_MENU) \
 	-I$(SRC_ASSETS_DIR) \
-	-I$(SRC_UTILS_DIR)
+	-I$(SRC_UTILS_DIR) \
+	$(WARNING_FLAGS)
 
 
-# MBC1 + RAM + BATTERY
-CARTRIDGE_TYPE = -Wl-yt1 -Wl-ya1
+# MBC5 + RAM + BATTERY
+CARTRIDGE_TYPE = -Wl-yt5 -Wl-ya4
 
 # ============================================================================
 # TARGETS
@@ -109,6 +114,9 @@ $(BUILD_DIR)/$(PROJECT).gb: $(SOURCES) | $(BUILD_DIR)
 clean:
 	rm -rf $(BUILD_DIR)
 
+# Rebuild (clean + make)
+re: clean all
+
 # Run in emulator (requires an emulator like SameBoy, BGB, or VBA)
 run: $(BUILD_DIR)/$(PROJECT).gb
 	${OPEN_CMD} $(BUILD_DIR)/$(PROJECT).gb
@@ -117,4 +125,4 @@ run: $(BUILD_DIR)/$(PROJECT).gb
 debug: CFLAGS += -Wl-y
 debug: $(BUILD_DIR)/$(PROJECT).gb
 
-.PHONY: all clean run debug
+.PHONY: all clean re run debug

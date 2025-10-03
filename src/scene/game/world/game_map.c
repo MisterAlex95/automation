@@ -48,29 +48,29 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type,
 
   switch (tile_type) {
   case TILE_TYPE_NONE:
-    mapBackground[tile_index] = BG_EMPTY;
+    mapBackground[tile_index] = (UBYTE)BG_EMPTY;
     break;
   case TILE_TYPE_WALL:
     if (mapBackground[tile_index] != BG_EMPTY)
       break;
-    mapBackground[tile_index] = BG_WALL;
+    mapBackground[tile_index] = (UBYTE)BG_WALL;
     break;
   case TILE_TYPE_CONVEYOR:
     if (mapBackground[tile_index] != BG_EMPTY)
       break;
 
     if (direction == DIRECTION_UP)
-      mapBackground[tile_index] = BG_CONVEYOR_BELT_UP;
+      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_UP;
     else if (direction == DIRECTION_DOWN)
-      mapBackground[tile_index] = BG_CONVEYOR_BELT_DOWN;
+      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_DOWN;
     else if (direction == DIRECTION_LEFT)
-      mapBackground[tile_index] = BG_CONVEYOR_BELT_LEFT;
+      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_LEFT;
     else
-      mapBackground[tile_index] = BG_CONVEYOR_BELT_RIGHT;
+      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_RIGHT;
     break;
   case TILE_TYPE_MINER:
     if (mapBackground[tile_index] == BG_MINE) {
-      mapBackground[tile_index] = BG_MINER;
+      mapBackground[tile_index] = (UBYTE)BG_MINER;
       miner_t *m = get_miners();
       m[game.miner_count].active = 1;
       m[game.miner_count].tile_x = tile_x;
@@ -84,7 +84,7 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type,
   case TILE_TYPE_CHEST:
     if (mapBackground[tile_index] != BG_EMPTY)
       break;
-    mapBackground[tile_index] = BG_CHEST;
+    mapBackground[tile_index] = (UBYTE)BG_CHEST;
     break;
   default:
     break;

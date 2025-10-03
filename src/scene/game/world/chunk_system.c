@@ -62,7 +62,10 @@ chunk_t *chunk_get_at_position(UBYTE world_x, UBYTE world_y) {
   UBYTE chunk_x = world_x / CHUNK_SIZE;
   UBYTE chunk_y = world_y / CHUNK_SIZE;
 
-  if (chunk_x >= CHUNK_COUNT_X || chunk_y >= CHUNK_COUNT_Y) {
+  if (chunk_x >= CHUNK_COUNT_X) {
+    return NULL;
+  }
+  if (chunk_y >= CHUNK_COUNT_Y) {
     return NULL;
   }
 
@@ -78,7 +81,9 @@ chunk_t *chunk_get_at_position(UBYTE world_x, UBYTE world_y) {
 }
 
 UBYTE chunk_get_id(UBYTE world_x, UBYTE world_y) {
-  return (world_x / CHUNK_SIZE) + (world_y / CHUNK_SIZE) * CHUNK_COUNT_X;
+  UBYTE chunk_x = world_x / CHUNK_SIZE;
+  UBYTE chunk_y = world_y / CHUNK_SIZE;
+  return chunk_x + chunk_y * CHUNK_COUNT_X;
 }
 
 void chunk_unload_oldest(void) {

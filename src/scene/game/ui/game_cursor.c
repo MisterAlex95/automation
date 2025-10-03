@@ -8,14 +8,17 @@ void game_move_cursor(int dx, int dy)
     int new_x = game.cursor_x + dx;
     int new_y = game.cursor_y + dy;
 
-    if (new_x < SCREEN_X_OFFSET)
+    if (new_x < SCREEN_X_OFFSET) {
         new_x = SCREEN_X_OFFSET;
-    if (new_y < SCREEN_Y_OFFSET)
-        new_y = SCREEN_Y_OFFSET;
-    if (new_x > MAP_WIDTH - 1)
+    } else if (new_x > MAP_WIDTH - 1) {
         new_x = MAP_WIDTH - 1;
-    if (new_y > MAP_HEIGHT - 1)
+    }
+    
+    if (new_y < SCREEN_Y_OFFSET) {
+        new_y = SCREEN_Y_OFFSET;
+    } else if (new_y > MAP_HEIGHT - 1) {
         new_y = MAP_HEIGHT - 1;
+    }
 
     cursor_camera_handle_movement(dx, dy, &game.cursor_x, &game.cursor_y);
     
