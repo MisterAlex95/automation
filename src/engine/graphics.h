@@ -12,6 +12,8 @@ void graphics_init(void);
 void graphics_clear(void);
 void graphics_load_tiles(const unsigned char *tiles, UINT16 tile_count, UINT8 vram_index);
 void graphics_draw_background(const unsigned char *map, UINT8 width, UINT8 height);
+void graphics_draw_background_at(UBYTE tile_value, UINT8 x, UINT8 y);
+void graphics_draw_background_partial(const unsigned char *map, UINT8 width, UINT8 height, UINT8 x, UINT8 y);
 
 // Loading helpers functions
 void graphics_load_bg_tiles(const unsigned char *tiles, UINT8 count);

@@ -54,12 +54,14 @@ SOURCES = \
 	$(SRC_ENGINE_DIR)/input.c \
 	$(SRC_SCENE_MENU)/scene_menu.c \
 	$(SRC_SCENE_GAME)/core/game_logic.c \
+	$(SRC_SCENE_GAME)/core/sram_system.c \
 	$(SRC_SCENE_GAME)/ui/game_cursor.c \
 	$(SRC_SCENE_GAME)/ui/cursor_camera_controller.c \
 	$(SRC_SCENE_GAME)/ui/input_handler.c \
 	$(SRC_SCENE_GAME)/core/scene_game.c \
 	$(SRC_SCENE_GAME)/ui/ui_manager.c \
 	$(SRC_SCENE_GAME)/world/game_map.c \
+	$(SRC_SCENE_GAME)/world/chunk_system.c \
 	$(SRC_SCENE_GAME)/ui/menu/menu.c \
 	$(SRC_SCENE_GAME)/entities/item_system.c \
 	$(SRC_SCENE_GAME)/entities/miner_system.c \
@@ -75,6 +77,10 @@ SOURCES = \
 # COMPILER FLAGS
 # ============================================================================
 
+// 110: unused parameter
+// 158: unused variable
+WARNING_FLAGS = -Wf--disable-warning=110 -Wf--disable-warning=158
+
 CFLAGS = -Wa-l -Wl-m -Wl-j -I$(GBDK_HOME)/include -I$(SRC_DIR) \
 	-I$(SRC_ENGINE_DIR) \
 	-I$(SRC_SYSTEM_DIR) \
@@ -82,7 +88,12 @@ CFLAGS = -Wa-l -Wl-m -Wl-j -I$(GBDK_HOME)/include -I$(SRC_DIR) \
 	-I$(SRC_SCENE_GAME)/menu \
 	-I$(SRC_SCENE_MENU) \
 	-I$(SRC_ASSETS_DIR) \
-	-I$(SRC_UTILS_DIR)
+	-I$(SRC_UTILS_DIR) \
+	$(WARNING_FLAGS)
+
+
+# MBC5 + RAM + BATTERY
+CARTRIDGE_TYPE = -Wl-yt5 -Wl-ya4
 
 # ============================================================================
 # TARGETS
@@ -97,11 +108,14 @@ $(BUILD_DIR):
 
 # Compile the ROM
 $(BUILD_DIR)/$(PROJECT).gb: $(SOURCES) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -o $@ $(SOURCES)
+	$(CC) $(CFLAGS) $(CARTRIDGE_TYPE) -o $@ $(SOURCES)
 
 # Clean build files
 clean:
 	rm -rf $(BUILD_DIR)
+
+# Rebuild (clean + make)
+re: clean all
 
 # Run in emulator (requires an emulator like SameBoy, BGB, or VBA)
 run: $(BUILD_DIR)/$(PROJECT).gb
@@ -111,4 +125,4 @@ run: $(BUILD_DIR)/$(PROJECT).gb
 debug: CFLAGS += -Wl-y
 debug: $(BUILD_DIR)/$(PROJECT).gb
 
-.PHONY: all clean run debug
+.PHONY: all clean re run debug

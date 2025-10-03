@@ -43,7 +43,7 @@ static void handle_input(UINT8 keys, UINT8 keys_prev) {
     selected_option = MAX(selected_option - 1, 0);
 
   if (keys & J_DOWN)
-    selected_option = MIN(selected_option + 1, 1);
+    selected_option = (selected_option < 1) ? selected_option + 1 : 1;
 
   if (keys & J_START) {
     if (selected_option == 0) {

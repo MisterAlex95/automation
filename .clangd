@@ -1,0 +1,13 @@
+CompileFlags:
+  Add:
+    - -I/home/alex/gbdk/include
+    - -Isrc
+    - -Isrc/engine
+    - -Isrc/system
+    - -Isrc/scene/game
+    - -Isrc/scene/game/menu
+    - -Isrc/scene/menu
+    - -Isrc/assets
+    - -Isrc/utils
+    - -DGBDK_COMPAT
+    - -Wno-unrecognized-port

@@ -38,6 +38,16 @@ void graphics_draw_background(const unsigned char *map, UINT8 width, UINT8 heigh
     set_bkg_tiles(0, 0, width, height, map);
 }
 
+void graphics_draw_background_at(UBYTE tile_value, UINT8 x, UINT8 y)
+{
+    set_bkg_tiles(x, y, 1, 1, &tile_value);
+}
+
+void graphics_draw_background_partial(const unsigned char *map, UINT8 width, UINT8 height, UINT8 x, UINT8 y)
+{
+    set_bkg_tiles(x, y, width, height, map);
+}
+
 // Sprite functions
 
 void graphics_load_sprite(const unsigned char *sprite_data, UINT8 vram_tile_index)

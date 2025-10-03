@@ -30,7 +30,18 @@
 #define MAP_WIDTH_PIXEL MAP_WIDTH *TILE_SIZE
 #define MAP_HEIGHT_PIXEL MAP_HEIGHT *TILE_SIZE
 
+// Chunk configuration
+#define CHUNK_SIZE 16
+#define CHUNK_COUNT_X 3
+#define CHUNK_COUNT_Y 3
+#define MAX_LOADED_CHUNKS 4
+
 #define MAX_ITEMS_PER_TILE 2
+
+// SRAM configuration
+#define SRAM_START_ADDR 0xA000
+#define SRAM_CHUNK_SIZE sizeof(chunk_t)
+#define SRAM_MAX_CHUNKS (CHUNK_COUNT_X * CHUNK_COUNT_Y)
 
 // TILE TYPES
 

@@ -20,15 +20,6 @@ item_t *item_spawn(UBYTE type, UINT8 x, UINT8 y, UBYTE direction)
     game_map_place_item_on_tile(item->id, x, y);
 
     UINT8 tile_index = (UINT8)ITEM_INGOT_TILE;
-    switch (type)
-    {
-    case ITEM_TYPE_INGOT:
-        tile_index = (UINT8)ITEM_INGOT_TILE;
-        break;
-    default:
-        tile_index = (UINT8)ITEM_INGOT_TILE;
-        break;
-    }
 
     graphics_assign_sprite(item->sprite_id, tile_index);
     entity_update_screen_position(item->world_x, item->world_y, item->sprite_id);
