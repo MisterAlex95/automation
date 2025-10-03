@@ -90,5 +90,5 @@ void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type,
     break;
   }
 
-  graphics_draw_background(mapBackground, MAP_WIDTH, MAP_HEIGHT);
+  graphics_draw_background_at(mapBackground[tile_index], x, y);
 }
