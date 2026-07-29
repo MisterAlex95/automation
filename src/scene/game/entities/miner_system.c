@@ -3,6 +3,30 @@
 #include "../world/game_map.h"
 #include "constants.h"
 
+UBYTE miner_register(UBYTE tile_x, UBYTE tile_y, UBYTE direction)
+{
+    miner_t *miners = get_miners();
+
+    if (game.miner_count >= MAX_MINERS)
+        return FALSE;
+
+    for (UBYTE i = 0; i < MAX_MINERS; i++)
+    {
+        if (miners[i].active)
+            continue;
+
+        miners[i].active = 1;
+        miners[i].tile_x = tile_x;
+        miners[i].tile_y = tile_y;
+        miners[i].direction = direction;
+        miners[i].rate = MINER_DEFAULT_RATE;
+        miners[i].cooldown = MINER_DEFAULT_COOLDOWN;
+        game.miner_count++;
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void miner_update_all(void)
 {
     miner_t *miners = get_miners();
@@ -36,21 +60,25 @@ void miner_spawn_item(miner_t *miner)
         spawn_x += 1;
         break;
     case DIRECTION_LEFT:
-        spawn_x -= 1;
+        if (spawn_x > 0)
+            spawn_x -= 1;
         break;
     case DIRECTION_UP:
-        spawn_y -= 1;
+        if (spawn_y > 0)
+            spawn_y -= 1;
         break;
     case DIRECTION_DOWN:
         spawn_y += 1;
         break;
     }
 
-    UBYTE item_count;
-    game_map_get_items_on_tile(spawn_x, spawn_y, &item_count);
+    if (spawn_x >= MAP_WIDTH || spawn_y >= MAP_HEIGHT)
+        return;
 
-    if (item_count == 0)
+    if (!game_map_has_item_on_tile(spawn_x, spawn_y))
     {
-        item_spawn(ITEM_TYPE_INGOT, spawn_x, spawn_y, miner->direction);
+        // Alternate ore/ingot for variety
+        UBYTE type = ((miner->tile_x + miner->tile_y) & 1) ? ITEM_TYPE_ORE : ITEM_TYPE_INGOT;
+        item_spawn(type, spawn_x, spawn_y, miner->direction);
     }
 }

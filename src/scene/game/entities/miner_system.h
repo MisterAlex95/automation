@@ -4,8 +4,8 @@
 #include <gb/gb.h>
 #include "game.h"
 
-// Miner management
 void miner_update_all(void);
 void miner_spawn_item(miner_t *miner);
+UBYTE miner_register(UBYTE tile_x, UBYTE tile_y, UBYTE direction);
 
 #endif // MINER_SYSTEM_H

@@ -8,13 +8,15 @@
 #define MAX_ITEMS 39
 #define MAX_MINERS 8
 #define MAX_SPRITES 40
+#define WIN_SCORE 20
 
 // Screen configuration
 #define SCREEN_TILE_WIDTH 20
-#define SCREEN_TILE_HEIGHT 19
+#define SCREEN_TILE_HEIGHT 18
 #define TILE_SIZE 8
-#define SCREEN_WIDTH SCREEN_TILE_WIDTH *TILE_SIZE
-#define SCREEN_HEIGHT SCREEN_TILE_HEIGHT *TILE_SIZE
+#define SCREEN_WIDTH (SCREEN_TILE_WIDTH * TILE_SIZE)
+#define SCREEN_HEIGHT (SCREEN_TILE_HEIGHT * TILE_SIZE)
+// HUD / sprite margin on screen only (never subtract inside map writes)
 #define SCREEN_X_OFFSET 1
 #define SCREEN_Y_OFFSET 2
 
@@ -24,24 +26,29 @@
 #define CAMERA_DEAD_ZONE_Y_START 6
 #define CAMERA_DEAD_ZONE_Y_END 12
 
-// Map configuration
-#define MAP_WIDTH 33
-#define MAP_HEIGHT 33
-#define MAP_WIDTH_PIXEL MAP_WIDTH *TILE_SIZE
-#define MAP_HEIGHT_PIXEL MAP_HEIGHT *TILE_SIZE
-
-// Chunk configuration
+// Chunk / world configuration (48x48)
 #define CHUNK_SIZE 16
 #define CHUNK_COUNT_X 3
 #define CHUNK_COUNT_Y 3
-#define MAX_LOADED_CHUNKS 4
+#define MAX_LOADED_CHUNKS 6
+#define MAP_WIDTH (CHUNK_COUNT_X * CHUNK_SIZE)
+#define MAP_HEIGHT (CHUNK_COUNT_Y * CHUNK_SIZE)
+#define MAP_WIDTH_PIXEL (MAP_WIDTH * TILE_SIZE)
+#define MAP_HEIGHT_PIXEL (MAP_HEIGHT * TILE_SIZE)
 
-#define MAX_ITEMS_PER_TILE 2
+// ROM template size (seeded into top-left of world)
+#define MAP_TEMPLATE_WIDTH 33
+#define MAP_TEMPLATE_HEIGHT 33
 
-// SRAM configuration
+// SRAM layout
 #define SRAM_START_ADDR 0xA000
-#define SRAM_CHUNK_SIZE sizeof(chunk_t)
-#define SRAM_MAX_CHUNKS (CHUNK_COUNT_X * CHUNK_COUNT_Y)
+#define SRAM_MAGIC 0xA071
+#define SRAM_VERSION 2
+#define SRAM_HEADER_ADDR 0
+#define SRAM_SCORE_ADDR 4
+#define SRAM_MINERS_ADDR 16
+#define SRAM_ITEMS_ADDR 80
+#define SRAM_CHUNKS_ADDR 256
 
 // TILE TYPES
 
@@ -50,12 +57,14 @@
 #define TILE_TYPE_MINER 2
 #define TILE_TYPE_CHEST 3
 #define TILE_TYPE_WALL 4
-#define TILE_TYPE_COUNT 5
+#define TILE_TYPE_SPLITTER 5
+#define TILE_TYPE_COUNT 6
 
 // ITEM TYPES
 
 #define ITEM_TYPE_NONE 0
 #define ITEM_TYPE_INGOT 1
+#define ITEM_TYPE_ORE 2
 
 // DIRECTIONS
 
@@ -74,12 +83,13 @@
 
 #define UI_SPRITE_CURSOR 0
 #define SPRITE_VRAM_INDEX_CURSOR 0
-#define ITEMS_VRAM_INDEX_TOTAL 1
+#define ITEMS_VRAM_INDEX_TOTAL 2
 
 // TIMING
 
 #define MINER_DEFAULT_RATE 200
 #define MINER_DEFAULT_COOLDOWN 0
+#define CONVEYOR_UPDATE_DIVISOR 2
 
 // GAME INITIALIZATION
 

@@ -14,10 +14,11 @@
 #define BG_MINE (TILE_FACTORY_START + 6)
 #define BG_CHEST (TILE_FACTORY_START + 7)
 #define BG_WALL (TILE_FACTORY_START + 8)
+#define BG_SPLITTER (TILE_FACTORY_START + 9)
 
-#define SPRITE_VRAM_INDEX_TOTAL 9
+#define SPRITE_VRAM_INDEX_TOTAL 10
 
 extern const unsigned char mapTiles[];
-extern UBYTE mapBackground[];
+extern const UBYTE mapTemplate[];
 
 #endif // MAP_H

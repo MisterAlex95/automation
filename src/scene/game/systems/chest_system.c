@@ -3,6 +3,7 @@
 #include "../world/game_map.h"
 #include "map.h"
 #include "camera.h"
+#include "game.h"
 
 void chest_update_all_items(void)
 {
@@ -20,15 +21,17 @@ void chest_update_all_items(void)
 
 void chest_process_item(item_t *item)
 {
-    UBYTE item_x_pos = item->world_x - DEVICE_SPRITE_PX_OFFSET_X +
-                       (item->direction == DIRECTION_RIGHT ? 0 : TILE_SIZE - 1);
-    UBYTE item_y_pos = item->world_y - DEVICE_SPRITE_PX_OFFSET_Y +
-                       (item->direction == DIRECTION_DOWN ? 0 : TILE_SIZE - 1);
-
-    UBYTE tile_type = game_map_get_tile_at_position(item_x_pos, item_y_pos);
+    UBYTE tile_x = world_to_tile_x(item->world_x);
+    UBYTE tile_y = world_to_tile_y(item->world_y);
+    UBYTE tile_type = game_map_get_tile(tile_x, tile_y);
 
     if (tile_type != BG_CHEST)
         return;
+
+    if (item->type == ITEM_TYPE_INGOT)
+        game_add_score(1);
+    else if (item->type == ITEM_TYPE_ORE)
+        game_add_score(2);
 
     item_destroy(item);
 }

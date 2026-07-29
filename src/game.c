@@ -5,6 +5,8 @@
 #include "scene_menu.h"
 #include "scene/game/ui/menu/menu.h"
 #include "engine/vram_layout.h"
+#include "scene/game/core/sram_system.h"
+#include "constants.h"
 
 game_t game;
 static UBYTE active_items[MAX_ITEMS];
@@ -29,6 +31,8 @@ void game_init(void)
     game.menu_state = MENU_NONE;
     game.selected_tile = TILE_TYPE_NONE;
     game.miner_count = 0;
+    game.score = 0;
+    game.won = 0;
 
     for (int i = 0; i < MAX_MINERS; i++)
     {
@@ -65,6 +69,17 @@ void game_update_list_of_active_items(void)
         }
     }
     active_items[count] = 0xFF; // end of list marker
+}
+
+void game_add_score(UINT16 amount)
+{
+    if (game.score + amount > MAX_SCORE)
+        game.score = MAX_SCORE;
+    else
+        game.score += amount;
+
+    if (game.score >= WIN_SCORE)
+        game.won = 1;
 }
 
 void game_update_game(void)

@@ -2,22 +2,22 @@
 #define GAME_MAP_H
 
 #include "constants.h"
-#include "graphics.h"
-#include "map.h"
+#include <gb/gb.h>
 
-extern UBYTE tile_buffer[MAP_WIDTH][MAP_HEIGHT][MAX_ITEMS_PER_TILE];
-extern UBYTE tile_count[MAP_WIDTH][MAP_HEIGHT];
+// Tile access (world tile coordinates)
+UBYTE game_map_get_tile(UBYTE world_tx, UBYTE world_ty);
+void game_map_set_tile(UBYTE world_tx, UBYTE world_ty, UBYTE tile_value);
 
-// Manage items on the game map
-UBYTE game_map_get_tile_at_position(UBYTE x, UBYTE y);
-UBYTE *game_map_get_items_on_tile(UBYTE tile_x, UBYTE tile_y, UBYTE *out_count);
-void game_map_place_item_on_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y);
-void game_map_remove_item_from_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y);
-void game_map_clear_tile(UBYTE tile_x, UBYTE tile_y);
+// Legacy pixel-based lookup used by systems mid-migration
+UBYTE game_map_get_tile_at_position(UBYTE world_px, UBYTE world_py);
 
-// Manage tiles on the game map
-void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type,
-                         UBYTE direction);
-void game_map_remove_tile(UBYTE tile_x, UBYTE tile_y);
+// Sparse item occupancy (scans active items)
+UBYTE game_map_count_items_on_tile(UBYTE world_tx, UBYTE world_ty);
+UBYTE game_map_has_item_on_tile(UBYTE world_tx, UBYTE world_ty);
+
+// Place/remove buildings. Returns TRUE if tile changed.
+UBYTE game_map_place_tile(UBYTE world_tx, UBYTE world_ty, UBYTE tile_type,
+                          UBYTE direction);
+void game_map_remove_tile(UBYTE world_tx, UBYTE world_ty);
 
 #endif // GAME_MAP_H

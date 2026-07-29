@@ -7,6 +7,10 @@
 #include "map.h"
 #include "camera.h"
 #include "constants.h"
+#include "../world/viewport.h"
+#include "../core/save_system.h"
+#include "scene_menu.h"
+#include "scene.h"
 
 void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
 {
@@ -14,6 +18,13 @@ void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
 
     if (!keys)
         return;
+
+    if (game.won)
+    {
+        if (keys & J_START && !(keys_prev & J_START))
+            scene_set(&scene_menu);
+        return;
+    }
 
     if (keys & J_UP && !(keys_prev & J_UP))
     {
@@ -34,7 +45,9 @@ void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
 
     if (keys & J_A && !(keys_prev & J_A))
     {
-        game_spawn_tile(game.selected_tile, world_to_tile_x(camera_get_x()) + game_get_cursor_x(), world_to_tile_y(camera_get_y()) + game_get_cursor_y());
+        UBYTE wx = cursor_screen_to_world_x(game_get_cursor_x());
+        UBYTE wy = cursor_screen_to_world_y(game_get_cursor_y());
+        game_spawn_tile(game.selected_tile, wx, wy);
     }
     else if (keys & J_B && !(keys_prev & J_B))
     {
@@ -43,6 +56,8 @@ void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
     else if (keys & J_START && !(keys_prev & J_START))
     {
         game.paused = !game.paused;
+        if (game.paused)
+            save_game();
     }
 
     if (keys & J_SELECT && !(keys_prev & J_SELECT))
@@ -77,7 +92,7 @@ void menu_handle_input(UINT8 keys, UINT8 keys_prev)
         {
             game.menu_state = MENU_NONE;
             menu_clear();
-            graphics_draw_background(mapBackground, MAP_WIDTH, MAP_HEIGHT);
+            viewport_rebuild();
             HIDE_WIN;
         }
     }
@@ -98,7 +113,7 @@ void menu_handle_input(UINT8 keys, UINT8 keys_prev)
             game.menu_state = MENU_NONE;
             menu_clear();
             HIDE_WIN;
-            graphics_draw_background(mapBackground, MAP_WIDTH, MAP_HEIGHT);
+            viewport_rebuild();
         }
         if (keys & J_B && !(keys_prev & J_B))
         {

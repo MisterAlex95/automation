@@ -14,32 +14,48 @@
 #include "../ui/game_cursor.h"
 #include "../systems/render_system.h"
 #include "camera.h"
+#include "../world/viewport.h"
+#include "../world/chunk_system.h"
+#include "save_system.h"
+
+static UBYTE load_from_save = 0;
+
+void scene_game_set_load_mode(UBYTE from_save)
+{
+  load_from_save = from_save;
+}
 
 static void load(void)
 {
   camera_init();
-  
-  // Load BG tiles
-  graphics_load_bg_tiles(mapTiles, SPRITE_VRAM_INDEX_TOTAL);
-  graphics_draw_background(mapBackground, MAP_WIDTH, MAP_HEIGHT);
 
-  // Load UI and item tiles
+  if (load_from_save)
+    load_game();
+  else
+    save_new_game();
+
+  graphics_load_bg_tiles(mapTiles, SPRITE_VRAM_INDEX_TOTAL);
   graphics_load_ui_tiles(UITiles, UI_TILES_COUNT);
   graphics_load_sprite_tiles(itemsTiles, ITEMS_VRAM_INDEX_TOTAL);
 
   graphics_assign_sprite(UI_SPRITE_CURSOR, (UINT8)UI_CURSOR);
   graphics_hide_all_sprites();
 
-  graphics_move_sprite(UI_SPRITE_CURSOR, game.cursor_x, game.cursor_y);
+  viewport_init();
+  chunk_system_update();
+  camera_update_all_entity_positions();
+
+  graphics_move_sprite(UI_SPRITE_CURSOR, game.cursor_x * TILE_SIZE, game.cursor_y * TILE_SIZE);
 }
 
 static void update(void)
 {
-  if (game.paused == 0)
+  if (game.paused == 0 && game.won == 0)
   {
     game_chest_update();
     game_conveyor_belt_update();
     game_miners_update();
+    chunk_system_update();
   }
 
   display_items();
@@ -49,6 +65,7 @@ static void update(void)
 
 static void unload(void)
 {
+  save_game();
   graphics_clear();
   timer_reset();
   game_init();

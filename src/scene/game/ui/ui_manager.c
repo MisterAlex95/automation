@@ -8,14 +8,21 @@
 
 void ui_draw_hud(void)
 {
-    // ui_draw_tile_info_under_cursor();
-    // ui_draw_nbr_active_items();
     ui_cursor_position();
-    ui_draw_camera_debug();
 
-    // ui_draw_miner_x_info(0);
-    // ui_draw_item_x_info(0);
-    // ui_draw_timer();
+    char buf[32];
+    sprintf(buf, "S:%u  ", (unsigned)game.score);
+    graphics_draw_text(12, SCREEN_TILE_HEIGHT - 1, buf);
+
+    if (game.won)
+    {
+        graphics_draw_text(5, 8, "YOU WIN!");
+        graphics_draw_text(3, 10, "START:Menu");
+    }
+    else if (game.paused)
+    {
+        graphics_draw_text(6, 8, "PAUSED");
+    }
 }
 
 void ui_draw_timer(void)
@@ -28,8 +35,10 @@ void ui_draw_timer(void)
 void ui_cursor_position(void)
 {
     char buf[32];
-    sprintf(buf, "(%d,%d)  ", game.cursor_x, game.cursor_y);
-    graphics_draw_text(world_to_tile_x(camera_get_x()) + 0, world_to_tile_y(camera_get_y()) + SCREEN_TILE_HEIGHT - 3, buf);
+    UBYTE wx = cursor_screen_to_world_x(game.cursor_x);
+    UBYTE wy = cursor_screen_to_world_y(game.cursor_y);
+    sprintf(buf, "(%u,%u)  ", (unsigned)wx, (unsigned)wy);
+    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 1, buf);
 }
 
 void ui_draw_miner_x_info(UBYTE x)
@@ -65,12 +74,11 @@ void ui_draw_item_x_info(UBYTE x)
 
 void ui_draw_tile_info_under_cursor(void)
 {
-    UBYTE cursor_pixel_x = screen_to_world_x(game.cursor_x * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_X;
-    UBYTE cursor_pixel_y = screen_to_world_y(game.cursor_y * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_Y;
+    UBYTE wx = cursor_screen_to_world_x(game.cursor_x);
+    UBYTE wy = cursor_screen_to_world_y(game.cursor_y);
 
-    UBYTE tile = game_map_get_tile_at_position(cursor_pixel_x, cursor_pixel_y);
-    UBYTE out_count = 0;
-    game_map_get_items_on_tile(world_to_tile_y(camera_get_y()) + game.cursor_x, world_to_tile_y(camera_get_y()) + game.cursor_y, &out_count);
+    UBYTE tile = game_map_get_tile(wx, wy);
+    UBYTE out_count = game_map_count_items_on_tile(wx, wy);
 
     char buf[32];
     sprintf(buf, "Tile: %d (%d items) ", tile, out_count);
@@ -80,6 +88,6 @@ void ui_draw_tile_info_under_cursor(void)
 void ui_draw_camera_debug(void)
 {
     char buf[32];
-    sprintf(buf, "Cam:(%d,%d)", camera_get_x(), camera_get_y());
-    graphics_draw_text(world_to_tile_x(camera_get_x()) + 0, world_to_tile_y(camera_get_y()) + SCREEN_TILE_HEIGHT - 4, buf);
+    sprintf(buf, "Cam:(%u,%u)", (unsigned)camera_get_tile_x(), (unsigned)camera_get_tile_y());
+    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 2, buf);
 }

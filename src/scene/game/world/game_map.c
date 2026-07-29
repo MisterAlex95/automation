@@ -1,94 +1,109 @@
 #include "game_map.h"
-#include "game.h"
-#include "graphics.h"
+#include "chunk_system.h"
+#include "viewport.h"
 #include "map.h"
+#include "game.h"
+#include "camera.h"
 
-UBYTE tile_buffer[MAP_WIDTH][MAP_HEIGHT][MAX_ITEMS_PER_TILE] = {{{0}}};
-UBYTE tile_count[MAP_WIDTH][MAP_HEIGHT] = {{0}};
-
-UBYTE game_map_get_tile_at_position(UBYTE x, UBYTE y) {
-  return mapBackground[x / TILE_SIZE + (y / TILE_SIZE) * MAP_WIDTH];
+UBYTE game_map_get_tile(UBYTE world_tx, UBYTE world_ty)
+{
+  return chunk_get_tile(world_tx, world_ty);
 }
 
-UBYTE *game_map_get_items_on_tile(UBYTE tile_x, UBYTE tile_y,
-                                  UBYTE *out_count) {
-  if (out_count)
-    *out_count = tile_count[tile_x][tile_y];
-  return tile_buffer[tile_x][tile_y];
+void game_map_set_tile(UBYTE world_tx, UBYTE world_ty, UBYTE tile_value)
+{
+  chunk_set_tile(world_tx, world_ty, tile_value);
+  viewport_patch_tile(world_tx, world_ty);
 }
 
-void game_map_place_item_on_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y) {
-  if (tile_count[tile_x][tile_y] < MAX_ITEMS_PER_TILE) {
-    tile_buffer[tile_x][tile_y][tile_count[tile_x][tile_y]++] = item_id;
+UBYTE game_map_get_tile_at_position(UBYTE world_px, UBYTE world_py)
+{
+  return chunk_get_tile(world_to_tile_x(world_px), world_to_tile_y(world_py));
+}
+
+UBYTE game_map_count_items_on_tile(UBYTE world_tx, UBYTE world_ty)
+{
+  UBYTE count = 0;
+  UBYTE *active = game_get_active_items();
+  for (UBYTE i = 0; active[i] < 0xFF; i++)
+  {
+    item_t *item = &game.items[active[i]];
+    if (item->type == ITEM_TYPE_NONE)
+      continue;
+    if (world_to_tile_x(item->world_x) == world_tx &&
+        world_to_tile_y(item->world_y) == world_ty)
+      count++;
   }
+  return count;
 }
 
-void game_map_remove_item_from_tile(UBYTE item_id, UBYTE tile_x, UBYTE tile_y) {
-  UBYTE *items = tile_buffer[tile_x][tile_y];
-  UBYTE count = tile_count[tile_x][tile_y];
-
-  for (UBYTE i = 0; i < count; i++) {
-    if (items[i] == item_id) {
-      items[i] = items[count - 1];
-      tile_count[tile_x][tile_y]--;
-      break;
-    }
-  }
+UBYTE game_map_has_item_on_tile(UBYTE world_tx, UBYTE world_ty)
+{
+  return game_map_count_items_on_tile(world_tx, world_ty) > 0;
 }
 
-void game_map_clear_tile(UBYTE tile_x, UBYTE tile_y) {
-  tile_count[tile_x][tile_y] = 0;
-  tile_buffer[tile_x][tile_y][0] = 0xFF;
+static UBYTE conveyor_tile_for_direction(UBYTE direction)
+{
+  if (direction == DIRECTION_UP)
+    return BG_CONVEYOR_BELT_UP;
+  if (direction == DIRECTION_DOWN)
+    return BG_CONVEYOR_BELT_DOWN;
+  if (direction == DIRECTION_LEFT)
+    return BG_CONVEYOR_BELT_LEFT;
+  return BG_CONVEYOR_BELT_RIGHT;
 }
 
-void game_map_place_tile(UBYTE tile_x, UBYTE tile_y, UBYTE tile_type,
-                         UBYTE direction) {
-  UBYTE x = tile_x - 1, y = tile_y - 2;
-  UBYTE tile_index = x + (y * MAP_WIDTH);
+UBYTE game_map_place_tile(UBYTE world_tx, UBYTE world_ty, UBYTE tile_type,
+                          UBYTE direction)
+{
+  if (world_tx >= MAP_WIDTH || world_ty >= MAP_HEIGHT)
+    return FALSE;
 
-  switch (tile_type) {
+  UBYTE current = chunk_get_tile(world_tx, world_ty);
+
+  switch (tile_type)
+  {
   case TILE_TYPE_NONE:
-    mapBackground[tile_index] = (UBYTE)BG_EMPTY;
-    break;
+    return FALSE;
+
   case TILE_TYPE_WALL:
-    if (mapBackground[tile_index] != BG_EMPTY)
-      break;
-    mapBackground[tile_index] = (UBYTE)BG_WALL;
-    break;
+    if (current != BG_EMPTY)
+      return FALSE;
+    game_map_set_tile(world_tx, world_ty, BG_WALL);
+    return TRUE;
+
   case TILE_TYPE_CONVEYOR:
-    if (mapBackground[tile_index] != BG_EMPTY)
-      break;
+    if (current != BG_EMPTY)
+      return FALSE;
+    game_map_set_tile(world_tx, world_ty, conveyor_tile_for_direction(direction));
+    return TRUE;
 
-    if (direction == DIRECTION_UP)
-      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_UP;
-    else if (direction == DIRECTION_DOWN)
-      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_DOWN;
-    else if (direction == DIRECTION_LEFT)
-      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_LEFT;
-    else
-      mapBackground[tile_index] = (UBYTE)BG_CONVEYOR_BELT_RIGHT;
-    break;
+  case TILE_TYPE_SPLITTER:
+    if (current != BG_EMPTY)
+      return FALSE;
+    game_map_set_tile(world_tx, world_ty, BG_SPLITTER);
+    return TRUE;
+
   case TILE_TYPE_MINER:
-    if (mapBackground[tile_index] == BG_MINE) {
-      mapBackground[tile_index] = (UBYTE)BG_MINER;
-      miner_t *m = get_miners();
-      m[game.miner_count].active = 1;
-      m[game.miner_count].tile_x = tile_x;
-      m[game.miner_count].tile_y = tile_y;
-      m[game.miner_count].direction = direction;
-      m[game.miner_count].rate = 200;
-      m[game.miner_count].cooldown = 0;
-      game.miner_count = (game.miner_count + 1) % MAX_MINERS;
-    }
-    break;
-  case TILE_TYPE_CHEST:
-    if (mapBackground[tile_index] != BG_EMPTY)
-      break;
-    mapBackground[tile_index] = (UBYTE)BG_CHEST;
-    break;
-  default:
-    break;
-  }
+    if (current != BG_MINE)
+      return FALSE;
+    game_map_set_tile(world_tx, world_ty, BG_MINER);
+    return TRUE;
 
-  graphics_draw_background_at(mapBackground[tile_index], x, y);
+  case TILE_TYPE_CHEST:
+    if (current != BG_EMPTY)
+      return FALSE;
+    game_map_set_tile(world_tx, world_ty, BG_CHEST);
+    return TRUE;
+
+  default:
+    return FALSE;
+  }
+}
+
+void game_map_remove_tile(UBYTE world_tx, UBYTE world_ty)
+{
+  if (world_tx >= MAP_WIDTH || world_ty >= MAP_HEIGHT)
+    return;
+  game_map_set_tile(world_tx, world_ty, BG_EMPTY);
 }
