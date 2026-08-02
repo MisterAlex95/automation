@@ -31,6 +31,10 @@ void graphics_hide_sprite(UINT8 sprite_id);
 // Window functions
 void graphics_load_window_tiles(const unsigned char *tiles, UINT16 tile_count, UINT8 vram_index);
 void graphics_draw_window(const unsigned char *map, UINT8 width, UINT8 height);
+void graphics_draw_window_at(UBYTE tile_value, UINT8 x, UINT8 y);
+void graphics_draw_window_partial(const unsigned char *map, UINT8 width, UINT8 height, UINT8 x, UINT8 y);
+void graphics_fill_window_rect(UINT8 x, UINT8 y, UINT8 w, UINT8 h, UBYTE tile);
+void graphics_draw_window_text(UINT8 x, UINT8 y, const char *text);
 void graphics_move_window(UINT8 x, UINT8 y);
 void graphics_show_window(void);
 void graphics_hide_window(void);

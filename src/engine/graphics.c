@@ -112,6 +112,53 @@ void graphics_draw_window(const unsigned char *map, UINT8 width, UINT8 height)
     set_win_tiles(0, 0, width, height, map);
 }
 
+void graphics_draw_window_at(UBYTE tile_value, UINT8 x, UINT8 y)
+{
+    static UBYTE tile;
+    tile = tile_value;
+    set_win_tiles(x, y, 1, 1, &tile);
+}
+
+void graphics_draw_window_partial(const unsigned char *map, UINT8 width, UINT8 height, UINT8 x, UINT8 y)
+{
+    set_win_tiles(x, y, width, height, map);
+}
+
+void graphics_fill_window_rect(UINT8 x, UINT8 y, UINT8 w, UINT8 h, UBYTE tile)
+{
+    static UBYTE t;
+    t = tile;
+    for (UINT8 row = y; row < y + h; row++)
+    {
+        for (UINT8 col = x; col < x + w; col++)
+            set_win_tiles(col, row, 1, 1, &t);
+    }
+}
+
+void graphics_draw_window_text(UINT8 x, UINT8 y, const char *text)
+{
+    // GBDK default fonts use 128-encoding: tile 0 = space (ASCII 0x20)
+    UINT8 cx = x;
+    UINT8 cy = y;
+    while (*text)
+    {
+        if (*text == '\n')
+        {
+            cx = x;
+            cy++;
+            text++;
+            continue;
+        }
+        {
+            UBYTE ch = (UBYTE)*text;
+            UBYTE tile = (ch >= 0x20) ? (UBYTE)(ch - 0x20) : 0;
+            graphics_draw_window_at(tile, cx, cy);
+        }
+        cx++;
+        text++;
+    }
+}
+
 void graphics_show_window(void)
 {
     SHOW_WIN;

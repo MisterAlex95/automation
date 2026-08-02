@@ -31,10 +31,13 @@ void camera_update(int dx, int dy)
     if ((UINT16)new_camera_x == camera.x && (UINT16)new_camera_y == camera.y)
         return;
 
+    INT8 dtx = (INT8)(((int)new_camera_x - (int)camera.x) / TILE_SIZE);
+    INT8 dty = (INT8)(((int)new_camera_y - (int)camera.y) / TILE_SIZE);
+
     camera.x = (UINT16)new_camera_x;
     camera.y = (UINT16)new_camera_y;
 
-    viewport_rebuild();
+    viewport_scroll(dtx, dty);
     camera_update_all_entity_positions();
 }
 

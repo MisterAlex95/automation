@@ -11,7 +11,11 @@ void game_map_set_tile(UBYTE world_tx, UBYTE world_ty, UBYTE tile_value);
 // Legacy pixel-based lookup used by systems mid-migration
 UBYTE game_map_get_tile_at_position(UBYTE world_px, UBYTE world_py);
 
-// Sparse item occupancy (scans active items)
+// Item occupancy bitset (O(1) has-item checks)
+void game_map_occupancy_clear(void);
+void game_map_occupancy_rebuild(void);
+void game_map_item_enter(UBYTE world_tx, UBYTE world_ty);
+void game_map_item_leave(UBYTE world_tx, UBYTE world_ty);
 UBYTE game_map_count_items_on_tile(UBYTE world_tx, UBYTE world_ty);
 UBYTE game_map_has_item_on_tile(UBYTE world_tx, UBYTE world_ty);
 

@@ -29,6 +29,7 @@ item_t *item_spawn(UBYTE type, UINT8 x, UINT8 y, UBYTE direction)
     graphics_assign_sprite(item->sprite_id, tile_index);
     entity_update_screen_position(item->world_x, item->world_y, item->sprite_id);
 
+    game_map_item_enter(x, y);
     game_update_list_of_active_items();
     return item;
 }
@@ -49,6 +50,9 @@ void item_destroy(item_t *item)
 {
     if (!item)
         return;
+
+    if (item->type != ITEM_TYPE_NONE)
+        game_map_item_leave(world_to_tile_x(item->world_x), world_to_tile_y(item->world_y));
 
     graphics_hide_sprite(item->sprite_id);
     item->type = ITEM_TYPE_NONE;

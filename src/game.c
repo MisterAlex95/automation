@@ -1,11 +1,5 @@
 #include "game.h"
-#include "scene.h"
-#include "input.h"
-#include "graphics.h"
-#include "scene_menu.h"
-#include "scene/game/ui/menu/menu.h"
-#include "engine/vram_layout.h"
-#include "scene/game/core/sram_system.h"
+#include "scene/game/world/game_map.h"
 #include "constants.h"
 
 game_t game;
@@ -45,6 +39,7 @@ void game_init(void)
     }
 
     game_update_list_of_active_items();
+    game_map_occupancy_clear();
 }
 
 UBYTE *game_get_active_items(void)
@@ -82,7 +77,3 @@ void game_add_score(UINT16 amount)
         game.won = 1;
 }
 
-void game_update_game(void)
-{
-    scene_update();
-}

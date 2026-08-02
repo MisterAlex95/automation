@@ -27,6 +27,25 @@ UBYTE miner_register(UBYTE tile_x, UBYTE tile_y, UBYTE direction)
     return FALSE;
 }
 
+UBYTE miner_unregister(UBYTE tile_x, UBYTE tile_y)
+{
+    miner_t *miners = get_miners();
+
+    for (UBYTE i = 0; i < MAX_MINERS; i++)
+    {
+        if (!miners[i].active)
+            continue;
+        if (miners[i].tile_x != tile_x || miners[i].tile_y != tile_y)
+            continue;
+
+        miners[i].active = 0;
+        if (game.miner_count > 0)
+            game.miner_count--;
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void miner_update_all(void)
 {
     miner_t *miners = get_miners();

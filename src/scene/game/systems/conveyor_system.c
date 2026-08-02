@@ -101,12 +101,21 @@ void conveyor_move_item(item_t *item)
         if (!is_conveyor_tile(dest) && dest != BG_CHEST && dest != BG_SPLITTER)
             return;
 
+        game_map_item_leave(tile_x, tile_y);
         item->world_x = new_x;
         item->world_y = new_y;
+        game_map_item_enter(new_tile_x, new_tile_y);
     }
     else
     {
+        UBYTE next_tx = world_to_tile_x(new_x);
+        UBYTE next_ty = world_to_tile_y(new_y);
         item->world_x = new_x;
         item->world_y = new_y;
+        if (next_tx != tile_x || next_ty != tile_y)
+        {
+            game_map_item_leave(tile_x, tile_y);
+            game_map_item_enter(next_tx, next_ty);
+        }
     }
 }

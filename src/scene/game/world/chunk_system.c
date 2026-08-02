@@ -4,8 +4,30 @@
 #include "camera.h"
 
 static UBYTE loaded_chunk_count = 0;
-static UBYTE lru_tick = 0;
+static UINT16 lru_tick = 0;
 static cached_chunk_t loaded_chunks[MAX_LOADED_CHUNKS];
+// O(1) chunk_id -> slot index (0xFF = not loaded)
+static UBYTE chunk_slot_by_id[SRAM_TOTAL_CHUNKS];
+
+static UBYTE chunk_compute_checksum(const chunk_data_t *data)
+{
+  UBYTE sum = 0;
+  const UBYTE *bytes = (const UBYTE *)data->tiles;
+  for (UINT16 i = 0; i < (UINT16)(CHUNK_SIZE * CHUNK_SIZE); i++)
+    sum ^= bytes[i];
+  // Non-zero salt so an all-zero chunk never looks valid by accident
+  return sum ^ 0xA7;
+}
+
+static void chunk_finalize_checksum(chunk_data_t *data)
+{
+  data->checksum = chunk_compute_checksum(data);
+}
+
+static UBYTE chunk_data_is_valid(const chunk_data_t *data)
+{
+  return data->checksum == chunk_compute_checksum(data);
+}
 
 static UBYTE tile_from_template(UBYTE wx, UBYTE wy)
 {
@@ -34,33 +56,65 @@ static void fill_chunk_from_template(UBYTE chunk_id, chunk_data_t *out)
       out->tiles[ly][lx] = tile_from_template(wx, wy);
     }
   }
-}
-
-static UBYTE chunk_data_looks_valid(chunk_data_t *data)
-{
-  // Factory tiles live at 128+. Raw 0/FF means SRAM was empty or unavailable.
-  UBYTE sample = data->tiles[0][0];
-  return sample >= TILE_FACTORY_START && sample < (TILE_FACTORY_START + 16);
+  chunk_finalize_checksum(out);
 }
 
 static void chunk_touch(cached_chunk_t *chunk)
 {
-  chunk->last_used = lru_tick++;
+  chunk->last_used = ++lru_tick;
+}
+
+static UBYTE chunk_intersects_camera(UBYTE chunk_id, UBYTE cam_tx, UBYTE cam_ty)
+{
+  UBYTE cx = chunk_id % CHUNK_COUNT_X;
+  UBYTE cy = chunk_id / CHUNK_COUNT_X;
+  UBYTE min_cx = cam_tx / CHUNK_SIZE;
+  UBYTE min_cy = cam_ty / CHUNK_SIZE;
+  UBYTE max_tx = cam_tx + SCREEN_TILE_WIDTH - 1;
+  UBYTE max_ty = cam_ty + SCREEN_TILE_HEIGHT - 1;
+  if (max_tx >= MAP_WIDTH)
+    max_tx = MAP_WIDTH - 1;
+  if (max_ty >= MAP_HEIGHT)
+    max_ty = MAP_HEIGHT - 1;
+  UBYTE max_cx = max_tx / CHUNK_SIZE;
+  UBYTE max_cy = max_ty / CHUNK_SIZE;
+  return cx >= min_cx && cx <= max_cx && cy >= min_cy && cy <= max_cy;
 }
 
 static void chunk_unload_lru(void)
 {
   UBYTE best = 0xFF;
-  UBYTE best_used = 0xFF;
+  UINT16 best_used = 0xFFFF;
+  UBYTE cam_tx = camera_get_tile_x();
+  UBYTE cam_ty = camera_get_tile_y();
 
   for (UBYTE i = 0; i < MAX_LOADED_CHUNKS; i++)
   {
     if (!loaded_chunks[i].loaded)
       continue;
+    // Never evict chunks currently on screen
+    if (chunk_intersects_camera(loaded_chunks[i].chunk_id, cam_tx, cam_ty))
+      continue;
     if (loaded_chunks[i].last_used <= best_used)
     {
       best_used = loaded_chunks[i].last_used;
       best = i;
+    }
+  }
+
+  // Fallback: if everything is pinned, evict the oldest anyway
+  if (best == 0xFF)
+  {
+    best_used = 0xFFFF;
+    for (UBYTE i = 0; i < MAX_LOADED_CHUNKS; i++)
+    {
+      if (!loaded_chunks[i].loaded)
+        continue;
+      if (loaded_chunks[i].last_used <= best_used)
+      {
+        best_used = loaded_chunks[i].last_used;
+        best = i;
+      }
     }
   }
 
@@ -70,6 +124,7 @@ static void chunk_unload_lru(void)
   if (loaded_chunks[best].dirty)
     chunk_save_to_sram(loaded_chunks[best].chunk_id);
 
+  chunk_slot_by_id[loaded_chunks[best].chunk_id] = 0xFF;
   loaded_chunks[best].loaded = FALSE;
   loaded_chunks[best].dirty = FALSE;
   if (loaded_chunk_count > 0)
@@ -80,6 +135,8 @@ void chunk_system_init(void)
 {
   loaded_chunk_count = 0;
   lru_tick = 0;
+  for (UBYTE i = 0; i < SRAM_TOTAL_CHUNKS; i++)
+    chunk_slot_by_id[i] = 0xFF;
   for (UBYTE i = 0; i < MAX_LOADED_CHUNKS; i++)
   {
     loaded_chunks[i].dirty = FALSE;
@@ -106,12 +163,10 @@ UINT16 chunk_get_sram_address(UBYTE chunk_id)
 
 static cached_chunk_t *chunk_find_by_id(UBYTE chunk_id)
 {
-  for (UBYTE i = 0; i < MAX_LOADED_CHUNKS; i++)
-  {
-    if (loaded_chunks[i].loaded && loaded_chunks[i].chunk_id == chunk_id)
-      return &loaded_chunks[i];
-  }
-  return NULL;
+  UBYTE slot = chunk_slot_by_id[chunk_id];
+  if (slot == 0xFF)
+    return NULL;
+  return &loaded_chunks[slot];
 }
 
 cached_chunk_t *chunk_ensure_loaded(UBYTE chunk_id)
@@ -134,7 +189,7 @@ cached_chunk_t *chunk_ensure_loaded(UBYTE chunk_id)
       sram_read_block(chunk_get_sram_address(chunk_id),
                       (UBYTE *)&loaded_chunks[i].data, SRAM_CHUNK_SIZE);
 
-      if (!chunk_data_looks_valid(&loaded_chunks[i].data))
+      if (!chunk_data_is_valid(&loaded_chunks[i].data))
       {
         fill_chunk_from_template(chunk_id, &loaded_chunks[i].data);
         loaded_chunks[i].dirty = TRUE;
@@ -145,6 +200,7 @@ cached_chunk_t *chunk_ensure_loaded(UBYTE chunk_id)
       }
 
       loaded_chunks[i].loaded = TRUE;
+      chunk_slot_by_id[chunk_id] = i;
       chunk_touch(&loaded_chunks[i]);
       loaded_chunk_count++;
       return &loaded_chunks[i];
@@ -158,6 +214,7 @@ void chunk_save_to_sram(UBYTE chunk_id)
   cached_chunk_t *chunk = chunk_find_by_id(chunk_id);
   if (chunk && chunk->dirty)
   {
+    chunk_finalize_checksum(&chunk->data);
     sram_write_block(chunk_get_sram_address(chunk_id), (UBYTE *)&chunk->data,
                      SRAM_CHUNK_SIZE);
     chunk->dirty = FALSE;
@@ -171,6 +228,19 @@ void chunk_flush_all(void)
     if (loaded_chunks[i].loaded && loaded_chunks[i].dirty)
       chunk_save_to_sram(loaded_chunks[i].chunk_id);
   }
+}
+
+UBYTE chunk_peek_tile(UBYTE world_tx, UBYTE world_ty)
+{
+  if (world_tx >= MAP_WIDTH || world_ty >= MAP_HEIGHT)
+    return BG_WALL;
+
+  UBYTE chunk_id = chunk_get_id_from_tile(world_tx, world_ty);
+  cached_chunk_t *chunk = chunk_find_by_id(chunk_id);
+  if (!chunk)
+    return BG_EMPTY;
+
+  return chunk->data.tiles[chunk_get_local_y(world_ty)][chunk_get_local_x(world_tx)];
 }
 
 UBYTE chunk_get_tile(UBYTE world_tx, UBYTE world_ty)
@@ -274,6 +344,5 @@ void world_init(UBYTE force_new)
     sram_write_byte(SRAM_SCORE_ADDR + 1, 0);
   }
 
-  // Always materialize starting chunks in WRAM from template if SRAM is dead
   chunk_ensure_loaded(0);
 }

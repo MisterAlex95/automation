@@ -46,6 +46,7 @@ static void load(void)
   camera_update_all_entity_positions();
 
   graphics_move_sprite(UI_SPRITE_CURSOR, game.cursor_x * TILE_SIZE, game.cursor_y * TILE_SIZE);
+  ui_draw_hud();
 }
 
 static void update(void)
@@ -79,14 +80,10 @@ void display_items(void)
 
 static void handle_input(UINT8 keys, UINT8 keys_prev)
 {
-  if (game.menu_state == MENU_ORIENTATION_SELECTION || game.menu_state == MENU_TILE_SELECTION)
-  {
+  if (menu_is_open())
     menu_handle_input(keys, keys_prev);
-  }
   else
-  {
     input_handle_game_input(keys, keys_prev);
-  }
 }
 
 Scene scene_game = {load, update, unload, handle_input};

@@ -43,7 +43,7 @@
 // SRAM layout
 #define SRAM_START_ADDR 0xA000
 #define SRAM_MAGIC 0xA071
-#define SRAM_VERSION 2
+#define SRAM_VERSION 3
 #define SRAM_HEADER_ADDR 0
 #define SRAM_SCORE_ADDR 4
 #define SRAM_MINERS_ADDR 16

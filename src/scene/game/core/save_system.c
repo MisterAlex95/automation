@@ -2,6 +2,7 @@
 #include "sram_system.h"
 #include "game.h"
 #include "../world/chunk_system.h"
+#include "../world/game_map.h"
 #include "../entities/item_system.h"
 #include "constants.h"
 #include "graphics.h"
@@ -98,6 +99,7 @@ static void load_items(void)
     }
   }
   game_update_list_of_active_items();
+  game_map_occupancy_rebuild();
 }
 
 void save_game(void)
