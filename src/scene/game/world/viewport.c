@@ -47,3 +47,18 @@ void viewport_patch_tile(UBYTE world_tx, UBYTE world_ty)
   UBYTE sy = world_ty - cam_ty;
   graphics_draw_background_at(chunk_get_tile(world_tx, world_ty), sx, sy);
 }
+
+void viewport_restore_screen_rect(UBYTE sx, UBYTE sy, UBYTE w, UBYTE h)
+{
+  UBYTE cam_tx = camera_get_tile_x();
+  UBYTE cam_ty = camera_get_tile_y();
+  UBYTE x, y;
+
+  for (y = sy; y < sy + h && y < SCREEN_TILE_HEIGHT; y++)
+  {
+    for (x = sx; x < sx + w && x < SCREEN_TILE_WIDTH; x++)
+    {
+      graphics_draw_background_at(chunk_get_tile(cam_tx + x, cam_ty + y), x, y);
+    }
+  }
+}

@@ -55,7 +55,7 @@ void input_handle_game_input(UINT8 keys, UINT8 keys_prev)
     }
     else if (keys & J_START && !(keys_prev & J_START))
     {
-        game.paused = !game.paused;
+        game.paused = game.paused ? 0 : 1;
         if (game.paused)
             save_game();
     }

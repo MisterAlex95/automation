@@ -7,6 +7,42 @@ static UBYTE loaded_chunk_count = 0;
 static UBYTE lru_tick = 0;
 static cached_chunk_t loaded_chunks[MAX_LOADED_CHUNKS];
 
+static UBYTE tile_from_template(UBYTE wx, UBYTE wy)
+{
+  UBYTE tile = BG_EMPTY;
+
+  if (wx < MAP_TEMPLATE_WIDTH && wy < MAP_TEMPLATE_HEIGHT)
+    tile = mapTemplate[wx + wy * MAP_TEMPLATE_WIDTH];
+
+  if (wx == 0 || wy == 0 || wx == MAP_WIDTH - 1 || wy == MAP_HEIGHT - 1)
+    tile = BG_WALL;
+
+  return tile;
+}
+
+static void fill_chunk_from_template(UBYTE chunk_id, chunk_data_t *out)
+{
+  UBYTE cx = chunk_id % CHUNK_COUNT_X;
+  UBYTE cy = chunk_id / CHUNK_COUNT_X;
+
+  for (UBYTE ly = 0; ly < CHUNK_SIZE; ly++)
+  {
+    for (UBYTE lx = 0; lx < CHUNK_SIZE; lx++)
+    {
+      UBYTE wx = cx * CHUNK_SIZE + lx;
+      UBYTE wy = cy * CHUNK_SIZE + ly;
+      out->tiles[ly][lx] = tile_from_template(wx, wy);
+    }
+  }
+}
+
+static UBYTE chunk_data_looks_valid(chunk_data_t *data)
+{
+  // Factory tiles live at 128+. Raw 0/FF means SRAM was empty or unavailable.
+  UBYTE sample = data->tiles[0][0];
+  return sample >= TILE_FACTORY_START && sample < (TILE_FACTORY_START + 16);
+}
+
 static void chunk_touch(cached_chunk_t *chunk)
 {
   chunk->last_used = lru_tick++;
@@ -97,8 +133,18 @@ cached_chunk_t *chunk_ensure_loaded(UBYTE chunk_id)
       loaded_chunks[i].chunk_id = chunk_id;
       sram_read_block(chunk_get_sram_address(chunk_id),
                       (UBYTE *)&loaded_chunks[i].data, SRAM_CHUNK_SIZE);
+
+      if (!chunk_data_looks_valid(&loaded_chunks[i].data))
+      {
+        fill_chunk_from_template(chunk_id, &loaded_chunks[i].data);
+        loaded_chunks[i].dirty = TRUE;
+      }
+      else
+      {
+        loaded_chunks[i].dirty = FALSE;
+      }
+
       loaded_chunks[i].loaded = TRUE;
-      loaded_chunks[i].dirty = FALSE;
       chunk_touch(&loaded_chunks[i]);
       loaded_chunk_count++;
       return &loaded_chunks[i];
@@ -208,25 +254,8 @@ void world_seed_from_template(void)
   {
     for (UBYTE cx = 0; cx < CHUNK_COUNT_X; cx++)
     {
-      for (UBYTE ly = 0; ly < CHUNK_SIZE; ly++)
-      {
-        for (UBYTE lx = 0; lx < CHUNK_SIZE; lx++)
-        {
-          UBYTE wx = cx * CHUNK_SIZE + lx;
-          UBYTE wy = cy * CHUNK_SIZE + ly;
-          UBYTE tile = BG_EMPTY;
-
-          if (wx < MAP_TEMPLATE_WIDTH && wy < MAP_TEMPLATE_HEIGHT)
-            tile = mapTemplate[wx + wy * MAP_TEMPLATE_WIDTH];
-
-          // Outer world border
-          if (wx == 0 || wy == 0 || wx == MAP_WIDTH - 1 || wy == MAP_HEIGHT - 1)
-            tile = BG_WALL;
-
-          chunk.tiles[ly][lx] = tile;
-        }
-      }
       UBYTE chunk_id = cx + cy * CHUNK_COUNT_X;
+      fill_chunk_from_template(chunk_id, &chunk);
       sram_write_block(chunk_get_sram_address(chunk_id), (UBYTE *)&chunk,
                        SRAM_CHUNK_SIZE);
     }
@@ -244,4 +273,7 @@ void world_init(UBYTE force_new)
     sram_write_byte(SRAM_SCORE_ADDR, 0);
     sram_write_byte(SRAM_SCORE_ADDR + 1, 0);
   }
+
+  // Always materialize starting chunks in WRAM from template if SRAM is dead
+  chunk_ensure_loaded(0);
 }

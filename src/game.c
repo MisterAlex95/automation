@@ -29,7 +29,7 @@ void game_init(void)
     game.cursor_direction = INITIAL_CURSOR_DIRECTION;
     game.paused = 0;
     game.menu_state = MENU_NONE;
-    game.selected_tile = TILE_TYPE_NONE;
+    game.selected_tile = TILE_TYPE_CONVEYOR;
     game.miner_count = 0;
     game.score = 0;
     game.won = 0;

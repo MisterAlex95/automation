@@ -16,7 +16,7 @@ void menu_show_tile_selection(void)
   graphics_draw_text(5, 1, "Select Tile:\n");
 
   const char *tile_names[] = {
-      "NONE    ", "CONVEYOR", "MINER   ", "CHEST   ", "WALL    ", "SPLITTER"};
+      "ERASE   ", "CONVEYOR", "MINER   ", "CHEST   ", "WALL    ", "SPLITTER"};
   char tile_buffer[16];
   sprintf(tile_buffer, "> %s", tile_names[game.selected_tile]);
   graphics_draw_text(5, 3, tile_buffer);

@@ -123,6 +123,10 @@ void load_game(void)
 void save_new_game(void)
 {
   game_init();
+  // Bump save version invalidation by always forcing a fresh world seed
   world_init(TRUE);
+  game.selected_tile = TILE_TYPE_CONVEYOR;
+  game.paused = 0;
+  game.won = 0;
   save_game();
 }

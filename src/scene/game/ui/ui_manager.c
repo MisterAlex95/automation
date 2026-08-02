@@ -2,9 +2,12 @@
 #include "graphics.h"
 #include "game.h"
 #include "../world/game_map.h"
+#include "../world/viewport.h"
 #include "timer.h"
 #include "constants.h"
 #include "camera.h"
+
+static UBYTE pause_overlay_dirty = 0;
 
 void ui_draw_hud(void)
 {
@@ -18,10 +21,18 @@ void ui_draw_hud(void)
     {
         graphics_draw_text(5, 8, "YOU WIN!");
         graphics_draw_text(3, 10, "START:Menu");
+        pause_overlay_dirty = 1;
     }
     else if (game.paused)
     {
         graphics_draw_text(6, 8, "PAUSED");
+        pause_overlay_dirty = 1;
+    }
+    else if (pause_overlay_dirty)
+    {
+        // printf writes into the BG tilemap — restore world tiles underneath
+        viewport_restore_screen_rect(3, 8, 14, 3);
+        pause_overlay_dirty = 0;
     }
 }
 

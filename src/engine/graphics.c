@@ -40,7 +40,10 @@ void graphics_draw_background(const unsigned char *map, UINT8 width, UINT8 heigh
 
 void graphics_draw_background_at(UBYTE tile_value, UINT8 x, UINT8 y)
 {
-    set_bkg_tiles(x, y, 1, 1, &tile_value);
+    // SDCC: must not pass & of a register parameter to set_bkg_tiles
+    static UBYTE tile;
+    tile = tile_value;
+    set_bkg_tiles(x, y, 1, 1, &tile);
 }
 
 void graphics_draw_background_partial(const unsigned char *map, UINT8 width, UINT8 height, UINT8 x, UINT8 y)
