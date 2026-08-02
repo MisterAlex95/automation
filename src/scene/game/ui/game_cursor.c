@@ -5,20 +5,8 @@
 
 void game_move_cursor(int dx, int dy)
 {
-    int new_x = game.cursor_x + dx;
-    int new_y = game.cursor_y + dy;
-
-    if (new_x < SCREEN_X_OFFSET)
-        new_x = SCREEN_X_OFFSET;
-    if (new_y < SCREEN_Y_OFFSET)
-        new_y = SCREEN_Y_OFFSET;
-    if (new_x > MAP_WIDTH - 1)
-        new_x = MAP_WIDTH - 1;
-    if (new_y > MAP_HEIGHT - 1)
-        new_y = MAP_HEIGHT - 1;
-
     cursor_camera_handle_movement(dx, dy, &game.cursor_x, &game.cursor_y);
-    
+
     if (game.cursor_x < SCREEN_X_OFFSET)
         game.cursor_x = SCREEN_X_OFFSET;
     if (game.cursor_y < SCREEN_Y_OFFSET)
@@ -27,6 +15,14 @@ void game_move_cursor(int dx, int dy)
         game.cursor_x = SCREEN_TILE_WIDTH - 1;
     if (game.cursor_y >= SCREEN_TILE_HEIGHT)
         game.cursor_y = SCREEN_TILE_HEIGHT - 1;
+
+    // Clamp so world tile stays inside map
+    UBYTE wx = cursor_screen_to_world_x(game.cursor_x);
+    UBYTE wy = cursor_screen_to_world_y(game.cursor_y);
+    if (wx >= MAP_WIDTH)
+        game.cursor_x = SCREEN_X_OFFSET + (MAP_WIDTH - 1) - camera_get_tile_x();
+    if (wy >= MAP_HEIGHT)
+        game.cursor_y = SCREEN_Y_OFFSET + (MAP_HEIGHT - 1) - camera_get_tile_y();
 }
 
 void game_display_cursor(void)

@@ -30,13 +30,15 @@ typedef struct {
   UBYTE menu_state;
   UBYTE selected_tile;
   UBYTE miner_count;
+  UINT16 score;
+  UBYTE won;
 } game_t;
 
 void game_init(void);
-void game_update_game(void);
 UBYTE *game_get_active_items(void);
 miner_t *get_miners(void);
 void game_update_list_of_active_items(void);
+void game_add_score(UINT16 amount);
 
 extern game_t game;
 

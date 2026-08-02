@@ -1,10 +1,6 @@
 #include "game.h"
-#include "scene.h"
-#include "input.h"
-#include "graphics.h"
-#include "scene_menu.h"
-#include "scene/game/ui/menu/menu.h"
-#include "engine/vram_layout.h"
+#include "scene/game/world/game_map.h"
+#include "constants.h"
 
 game_t game;
 static UBYTE active_items[MAX_ITEMS];
@@ -27,8 +23,10 @@ void game_init(void)
     game.cursor_direction = INITIAL_CURSOR_DIRECTION;
     game.paused = 0;
     game.menu_state = MENU_NONE;
-    game.selected_tile = TILE_TYPE_NONE;
+    game.selected_tile = TILE_TYPE_CONVEYOR;
     game.miner_count = 0;
+    game.score = 0;
+    game.won = 0;
 
     for (int i = 0; i < MAX_MINERS; i++)
     {
@@ -41,6 +39,7 @@ void game_init(void)
     }
 
     game_update_list_of_active_items();
+    game_map_occupancy_clear();
 }
 
 UBYTE *game_get_active_items(void)
@@ -67,7 +66,14 @@ void game_update_list_of_active_items(void)
     active_items[count] = 0xFF; // end of list marker
 }
 
-void game_update_game(void)
+void game_add_score(UINT16 amount)
 {
-    scene_update();
+    if (game.score + amount > MAX_SCORE)
+        game.score = MAX_SCORE;
+    else
+        game.score += amount;
+
+    if (game.score >= WIN_SCORE)
+        game.won = 1;
 }
+

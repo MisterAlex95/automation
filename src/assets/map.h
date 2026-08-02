@@ -1,7 +1,9 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "engine/vram_layout.h"
+#include <gb/gb.h>
+#include "../constants.h"
+#include "../engine/vram_layout.h"
 
 #define BG_EMPTY (TILE_FACTORY_START + 0)
 #define BG_CONVEYOR_BELT_RIGHT (TILE_FACTORY_START + 1)
@@ -12,10 +14,11 @@
 #define BG_MINE (TILE_FACTORY_START + 6)
 #define BG_CHEST (TILE_FACTORY_START + 7)
 #define BG_WALL (TILE_FACTORY_START + 8)
+#define BG_SPLITTER (TILE_FACTORY_START + 9)
 
-#define SPRITE_VRAM_INDEX_TOTAL 9
+#define SPRITE_VRAM_INDEX_TOTAL 10
 
 extern const unsigned char mapTiles[];
-extern unsigned char mapBackground[];
+extern const UBYTE mapTemplate[];
 
 #endif // MAP_H

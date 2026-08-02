@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include <gb/gb.h>
+#include "constants.h"
 
 #define CAMERA_SPEED 1
 
@@ -16,6 +17,8 @@ void camera_init(void);
 void camera_update(int dx, int dy);
 UINT16 camera_get_x(void);
 UINT16 camera_get_y(void);
+UBYTE camera_get_tile_x(void);
+UBYTE camera_get_tile_y(void);
 
 UBYTE camera_can_move_left(void);
 UBYTE camera_can_move_right(void);
@@ -30,6 +33,10 @@ UINT8 world_to_tile_x(UINT16 world_x);
 UINT8 world_to_tile_y(UINT16 world_y);
 UINT16 tile_to_world_x(UINT8 tile_x);
 UINT16 tile_to_world_y(UINT8 tile_y);
+
+// Cursor screen tiles -> world tiles (accounts for sprite/HUD margin)
+UBYTE cursor_screen_to_world_x(UBYTE cursor_sx);
+UBYTE cursor_screen_to_world_y(UBYTE cursor_sy);
 
 void entity_update_screen_position(UINT16 world_x, UINT16 world_y, UBYTE sprite_id);
 void entity_set_world_position(UINT16 *world_x, UINT16 *world_y, UINT8 tile_x, UINT8 tile_y);

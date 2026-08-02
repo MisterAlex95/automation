@@ -1,85 +1,102 @@
 #include "ui_manager.h"
 #include "graphics.h"
 #include "game.h"
-#include "../world/game_map.h"
-#include "timer.h"
 #include "constants.h"
 #include "camera.h"
+#include "menu/menu.h"
+#include <stdio.h>
+
+#define HUD_WIN_X 7
+#define HUD_WIN_Y 136
+
+static UBYTE hud_dirty = 1;
+static UINT16 hud_last_score = 0xFFFF;
+static UBYTE hud_last_cx = 0xFF;
+static UBYTE hud_last_cy = 0xFF;
+static UBYTE overlay_mode = 0; // 0=hud, 1=pause, 2=win
+
+static void ui_show_hud_window(void)
+{
+    graphics_fill_window_rect(0, 0, 20, 2, 0);
+    graphics_move_window(HUD_WIN_X, HUD_WIN_Y);
+    graphics_show_window();
+    overlay_mode = 0;
+    hud_dirty = 1;
+}
+
+static void ui_draw_hud_contents(void)
+{
+    char buf[20];
+    UBYTE wx = cursor_screen_to_world_x(game.cursor_x);
+    UBYTE wy = cursor_screen_to_world_y(game.cursor_y);
+
+    sprintf(buf, "(%u,%u)  ", (unsigned)wx, (unsigned)wy);
+    graphics_draw_window_text(0, 0, buf);
+
+    sprintf(buf, "S:%u  ", (unsigned)game.score);
+    graphics_draw_window_text(10, 0, buf);
+
+    hud_last_score = game.score;
+    hud_last_cx = wx;
+    hud_last_cy = wy;
+    hud_dirty = 0;
+}
 
 void ui_draw_hud(void)
 {
-    // ui_draw_tile_info_under_cursor();
-    // ui_draw_nbr_active_items();
-    ui_cursor_position();
-    ui_draw_camera_debug();
+    static UBYTE was_menu = 0;
 
-    // ui_draw_miner_x_info(0);
-    // ui_draw_item_x_info(0);
-    // ui_draw_timer();
-}
-
-void ui_draw_timer(void)
-{
-    char buf[32];
-    sprintf(buf, "%d", timer_get_seconds());
-    graphics_draw_text(SCREEN_TILE_WIDTH - 4, 1, buf);
-}
-
-void ui_cursor_position(void)
-{
-    char buf[32];
-    sprintf(buf, "(%d,%d)  ", game.cursor_x, game.cursor_y);
-    graphics_draw_text(world_to_tile_x(camera_get_x()) + 0, world_to_tile_y(camera_get_y()) + SCREEN_TILE_HEIGHT - 3, buf);
-}
-
-void ui_draw_miner_x_info(UBYTE x)
-{
-    miner_t *m = &get_miners()[x];
-    char buf[32];
-    sprintf(buf, "(%d,%d) R:%d C:%d  ", m->tile_x, m->tile_y, m->rate, m->cooldown);
-    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 4, buf);
-}
-
-void ui_draw_nbr_active_items(void)
-{
-    int count = 0;
-    for (int i = 0; i < MAX_ITEMS; i++)
+    if (menu_is_open())
     {
-        if (game.items[i].type != ITEM_TYPE_NONE)
-            count++;
+        was_menu = 1;
+        return;
     }
-    char buf[32];
-    sprintf(buf, "Active: %d", count);
-    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 2, buf);
-}
 
-void ui_draw_item_x_info(UBYTE x)
-{
-    item_t *item = &game.items[x];
-    char buf[32];
-    UBYTE tile_x = world_to_tile_x(item->world_x);
-    UBYTE tile_y = world_to_tile_y(item->world_y);
-    sprintf(buf, "(%d,%d)   (%d,%d)", item->world_x, item->world_y, tile_x, tile_y);
-    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 2, buf);
-}
+    if (was_menu)
+    {
+        was_menu = 0;
+        ui_show_hud_window();
+    }
 
-void ui_draw_tile_info_under_cursor(void)
-{
-    UBYTE cursor_pixel_x = screen_to_world_x(game.cursor_x * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_X;
-    UBYTE cursor_pixel_y = screen_to_world_y(game.cursor_y * TILE_SIZE) - DEVICE_SPRITE_PX_OFFSET_Y;
+    if (game.won)
+    {
+        if (overlay_mode != 2)
+        {
+            graphics_fill_window_rect(0, 0, 20, 6, 0);
+            graphics_move_window(HUD_WIN_X, 64);
+            graphics_show_window();
+            graphics_draw_window_text(5, 1, "YOU WIN!");
+            graphics_draw_window_text(3, 3, "START:Menu");
+            overlay_mode = 2;
+        }
+        return;
+    }
 
-    UBYTE tile = game_map_get_tile_at_position(cursor_pixel_x, cursor_pixel_y);
-    UBYTE out_count = 0;
-    game_map_get_items_on_tile(world_to_tile_y(camera_get_y()) + game.cursor_x, world_to_tile_y(camera_get_y()) + game.cursor_y, &out_count);
+    if (game.paused)
+    {
+        if (overlay_mode != 1)
+        {
+            graphics_fill_window_rect(0, 0, 20, 4, 0);
+            graphics_move_window(HUD_WIN_X, 72);
+            graphics_show_window();
+            graphics_draw_window_text(6, 1, "PAUSED");
+            overlay_mode = 1;
+        }
+        return;
+    }
 
-    char buf[32];
-    sprintf(buf, "Tile: %d (%d items) ", tile, out_count);
-    graphics_draw_text(0, SCREEN_TILE_HEIGHT - 1, buf);
-}
+    if (overlay_mode != 0)
+        ui_show_hud_window();
+    else
+    {
+        graphics_move_window(HUD_WIN_X, HUD_WIN_Y);
+        graphics_show_window();
+    }
 
-void ui_draw_camera_debug(void)
-{
-    char buf[32];
-    sprintf(buf, "Cam:(%d,%d)", camera_get_x(), camera_get_y());
-    graphics_draw_text(world_to_tile_x(camera_get_x()) + 0, world_to_tile_y(camera_get_y()) + SCREEN_TILE_HEIGHT - 4, buf);
+    {
+        UBYTE wx = cursor_screen_to_world_x(game.cursor_x);
+        UBYTE wy = cursor_screen_to_world_y(game.cursor_y);
+        if (hud_dirty || game.score != hud_last_score || wx != hud_last_cx || wy != hud_last_cy)
+            ui_draw_hud_contents();
+    }
 }
